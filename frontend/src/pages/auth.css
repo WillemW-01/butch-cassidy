@@ -1,4 +1,4 @@
-.container {
+/* .container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -6,7 +6,7 @@
   height: 100vh;
   background: rgb(1, 0, 65);
   background: linear-gradient(135deg, rgba(1, 0, 65, 1) 0%, rgba(88, 0, 159, 1) 51%, rgba(225, 192, 251, 1) 100%);
-}
+} */
 
 .register {
   background: white;
@@ -74,6 +74,10 @@
   outline: none;
 }
 
+.register.body input:invalid {
+  border: 1px red solid;
+}
+
 .register.body button {
   background: rgb(20, 23, 71);
   color: white;
@@ -86,4 +90,33 @@
 .register.body button:active,
 .register.body button:hover {
   background: rgb(68, 58, 123)
+}
+
+.register.body.spinner {
+  position: absolute;
+  top: calc(50% - 50px);
+  left: calc(50% - 50px);
+  background-color: white;
+  box-shadow: rgba(54, 54, 54, 0.426) 1px 1px 10px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  animation-name: spin;
+  animation-duration: 300ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error {
+  color: rgb(183, 0, 0);
 }

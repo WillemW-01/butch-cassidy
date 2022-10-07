@@ -1,0 +1,55 @@
+.dashboard {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 7px;
+  background: white;
+  width: 90vw;
+  height: 90vh;
+  box-shadow: rgba(0, 0, 0, 0.413) 1px 1px 10px;
+  overflow-y: auto;
+  /* overflow-x: hidden; */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+
+  padding: 10px;
+}
+
+.header {
+  padding-left: 20px;
+  width: 100%;
+  display: flex;
+  border-bottom-width: 3px;
+  border-bottom-style: solid;
+  border-bottom-color: rgb(35, 28, 75);
+  align-items: center;
+}
+
+.header h1 {
+  border-right: rgb(35, 28, 75) 3px solid;
+  margin-right: 15px;
+  padding-right: 15px;
+  height: 50%;
+}
+
+.header button {
+  background: rgb(35, 28, 75);
+  font-size: 25px;
+  color: white;
+  margin-right: 15px;
+  padding: 5px;
+  border-right: rgb(35, 28, 75) 3px solid;
+}
+
+.header a {
+  text-decoration: none;
+  color: rgb(35, 28, 75);
+  font-weight: bold;
+  border-left: rgb(35, 28, 75) 3px solid;
+  height: 50%;
+  padding-left: 15px;
+
+}
