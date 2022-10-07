@@ -1,6 +1,7 @@
 import React from "react";
+import GraphItems from "../components/GraphItems";
 
-import Graph from "../components/Graph";
+import GraphOrders from "../components/GraphOrders";
 
 import "./dashboard.css";
 
@@ -20,7 +21,8 @@ function Dashboard() {
         </div>
 
         <div className="body">
-          <Graph />
+          <GraphOrders />
+          <GraphItems />
         </div>
       </div>
     </div>
