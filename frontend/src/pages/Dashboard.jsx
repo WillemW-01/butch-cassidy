@@ -10,8 +10,13 @@ function Dashboard() {
       <div className="dashboard">
         <div className="header">
           <h1>Dashboard</h1>
-          <button>+</button>
-          <a href="/auth">logout</a>
+          <label for="input">
+            Upload your data
+            <input id="input" type="file" accept=".csv" />
+          </label>
+          <div className="header logout">
+            <a href="/auth">logout</a>
+          </div>
         </div>
 
         <div className="body">
