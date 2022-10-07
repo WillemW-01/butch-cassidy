@@ -1,0 +1,89 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  background: rgb(1, 0, 65);
+  background: linear-gradient(135deg, rgba(1, 0, 65, 1) 0%, rgba(88, 0, 159, 1) 51%, rgba(225, 192, 251, 1) 100%);
+}
+
+.register {
+  background: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: rgba(255, 255, 255, 0.426) 1px 1px 10px;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.register.label {
+  justify-content: center;
+  margin: 10px;
+  border: none;
+  background: white;
+  box-shadow: none;
+}
+
+.register.label a {
+  text-decoration-line: none;
+  font-weight: bold;
+}
+
+.register.label h2 {
+  margin: 5px 0px;
+}
+
+.register.body {
+  background: white;
+  gap: 15px;
+  box-shadow: none;
+}
+
+.register.body h3 {
+  margin: 0px;
+}
+
+.register.body fieldset {
+  border-radius: 7px;
+  border-color: rgb(35, 28, 75);
+  border-style: solid;
+  width: 90%;
+  display: flex;
+  justify-content: center;
+}
+
+.register.body fieldset:hover {
+  background: rgb(238, 235, 255);
+}
+
+.register.body legend {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.register.body input {
+  border: none;
+  border-radius: 7px;
+  background: none;
+  padding: 10px;
+}
+
+.register.body input:focus {
+  outline: none;
+}
+
+.register.body button {
+  background: rgb(20, 23, 71);
+  color: white;
+  border-radius: 20px;
+  padding: 7px;
+  width: 100%;
+  border: none;
+}
+
+.register.body button:active,
+.register.body button:hover {
+  background: rgb(68, 58, 123)
+}
