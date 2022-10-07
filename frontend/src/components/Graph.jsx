@@ -61,6 +61,7 @@ function Graph() {
         series={series}
         type="area"
         height={500}
+        width={1000}
       />
       <br />
       <ReactApexChart
