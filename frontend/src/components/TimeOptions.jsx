@@ -15,7 +15,7 @@ function TimeOptions(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    props.submit(pastValue, futureValue);
+    props.submit(pastValue, futureValue, intervalValue);
   };
 
   return (

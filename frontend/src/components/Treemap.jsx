@@ -5,7 +5,7 @@ import Spinner from "./Spinner";
 
 function Treemap(props) {
   const [graphData, setGraphData] = useState([]);
-  const [showGraph, setShowGraph] = useState(false);
+  const [shouldShow, setShouldShow] = useState(false);
 
   const format = (data) => {
     if (data && graphData.length === 0) {
@@ -19,7 +19,7 @@ function Treemap(props) {
       });
 
       setGraphData(tempFormat);
-      setShowGraph(true);
+      setShouldShow(true);
     }
   };
 
@@ -66,14 +66,20 @@ function Treemap(props) {
     <div className="chart">
       <h2>{props.title}</h2>
 
-      <ReactApexChart
-        className="apex graph"
-        options={options}
-        series={series}
-        type="treemap"
-        width={500}
-        height={250}
-      />
+      {!shouldShow ? (
+        <Spinner type="balls" />
+      ) : (
+        <>
+          <ReactApexChart
+            className="apex graph"
+            options={options}
+            series={series}
+            type="treemap"
+            width={500}
+            height={250}
+          />
+        </>
+      )}
     </div>
   );
 }
