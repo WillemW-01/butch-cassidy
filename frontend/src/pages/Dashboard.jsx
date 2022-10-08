@@ -1,13 +1,9 @@
 import React from "react";
 import { useState, useEffect } from "react";
-
-import GraphItems from "../components/GraphItems";
 import GraphOrders from "../components/GraphOrders";
 import Treemap from "../components/Treemap";
 import Spinner from "../components/Spinner";
-
 import icon from "./add-panel.svg";
-
 import "./dashboard.css";
 import GraphSales from "../components/GraphSales";
 

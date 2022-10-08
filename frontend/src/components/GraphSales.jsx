@@ -9,13 +9,16 @@ function GraphSales(props) {
   const [sales, setSales] = useState([]);
   const [shouldShow, setShouldShow] = useState(false);
 
-  const getData = () => {
+  const submit = (pastValue, futureValue, interval) => {
     setShouldShow(false);
-    fetch("http://127.0.0.1:8000/analytics/calculate_sales").then(
+    console.log(
+      `Got past: ${pastValue} and future: ${futureValue} and interval: ${interval}`
+    );
+    fetch(`http://127.0.0.1:8000/analytics/calculate_${interval}_sales`).then(
       async (response) => {
         const data = await response.json();
         console.log(data);
-        setDate1(data.month);
+        setDate1(data.time);
         setSales(data.sales);
         setShouldShow(true);
       }
@@ -23,7 +26,7 @@ function GraphSales(props) {
   };
 
   useEffect(() => {
-    getData();
+    submit(0, 0, "monthly");
   }, []);
 
   var series = [
@@ -58,7 +61,7 @@ function GraphSales(props) {
       },
     },
     stroke: {
-      width: 4,
+      width: 3,
       curve: "straight",
     },
   };
@@ -70,7 +73,7 @@ function GraphSales(props) {
         <Spinner type="balls" height={300} />
       ) : (
         <>
-          <TimeOptions />
+          <TimeOptions submit={submit} />
           <ReactApexChart
             className="apex graph"
             options={options}

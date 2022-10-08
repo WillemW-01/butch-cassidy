@@ -1,3 +1,4 @@
+from tokenize import group
 from django.shortcuts import render
 from django.http import JsonResponse
 
@@ -32,6 +33,7 @@ def get_daily_quantities(request):
 
         return JsonResponse({"time": keys, "quantities": values})
 
+
 def get_weekly_quantities(request):
     orders1 = pd.read_csv("../data/restaurant-1-orders.csv")
     if request.method == "GET":
@@ -50,7 +52,8 @@ def get_weekly_quantities(request):
         (keys, values) = zip(*o.items())
 
         return JsonResponse({"time": keys, "quantities": values})
-    
+
+
 def get_monthly_quantities(request):
     orders1 = pd.read_csv("../data/restaurant-1-orders.csv")
     if request.method == "GET":
@@ -67,9 +70,52 @@ def get_monthly_quantities(request):
         return JsonResponse({"time": keys, "quantities": values})
 
 
+def calculate_daily_sales(request):
+    orders1 = pd.read_csv("../data/restaurant-1-orders.csv")
+    if request.method == "GET":
+        orders1["Product Price"] = orders1["Quantity"].astype(float) * orders1[
+            "Product Price"
+        ].astype(float)
+
+        # format to two decimals
+        orders1["Order Date"] = pd.to_datetime(orders1["Order Date"]).dt.strftime(
+            "%Y-%m-%d"
+        )
+
+        ob = orders1.groupby(["Order Date"])["Product Price"].sum().to_dict()
+
+        keys = list(ob.keys())
+        values = list(ob.values())
+        values = list(np.around(values, 2))
+
+        return JsonResponse({"time": keys, "sales": values})
 
 
-def calculate_sales(request):
+def calculate_weekly_sales(request):
+    orders1 = pd.read_csv("../data/restaurant-1-orders.csv")
+    if request.method == "GET":
+
+        orders1["Product Price"] = orders1["Quantity"].astype(float) * orders1[
+            "Product Price"
+        ].astype(float)
+
+        # format to two decimals
+        orders1["Order Date"] = pd.to_datetime(orders1["Order Date"])
+        orders1["Weekly"] = orders1["Order Date"].apply(
+            lambda x: x - pd.Timedelta(days=x.weekday())
+        )
+        orders1["Weekly"] = orders1["Weekly"].dt.strftime("%Y-%m-%d")
+
+        ob = orders1.groupby(["Weekly"])["Product Price"].sum().to_dict()
+
+        keys = list(ob.keys())
+        values = list(ob.values())
+        values = list(np.around(values, 2))
+
+        return JsonResponse({"time": keys, "sales": values})
+
+
+def calculate_monthly_sales(request):
     orders1 = pd.read_csv("../data/restaurant-1-orders.csv")
     if request.method == "GET":
         orders1["Product Price"] = orders1["Quantity"].astype(float) * orders1[
@@ -87,7 +133,7 @@ def calculate_sales(request):
         values = list(ob.values())
         values = list(np.around(values, 2))
 
-        return JsonResponse({"month": keys, "sales": values})
+        return JsonResponse({"time": keys, "sales": values})
 
 
 def search_items(request):
@@ -95,6 +141,7 @@ def search_items(request):
     if request.method == "POST":
 
         json_data = json.loads(request.body)
+        print(json_data)
         search_key = json_data["search_key"]
 
         orders1["Item Name"] = orders1["Item Name"][
@@ -109,11 +156,10 @@ def search_items(request):
         return JsonResponse({"items": keys, "quantity": values})
 
 
-def monthly_items(request):
+def top_items(request):
     orders1 = pd.read_csv("../data/restaurant-1-orders.csv")
     if request.method == "GET":
         grouped = orders1.groupby(["Item Name"])["Quantity"].sum()
-
         grouped.sort_values(ascending=False, inplace=True)
         grouped = grouped.head(15)
         (keys, values) = zip(*grouped.items())
