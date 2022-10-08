@@ -8,7 +8,7 @@ function GraphOrders(props) {
   const [date2, setDate2] = React.useState("");
   const [orders2, setOrders2] = React.useState([]);
 
-  const getData = () => {
+  const getDayData = () => {
     fetch("http://127.0.0.1:8000/analytics/get_daily_quantities").then(
       async (response) => {
         const data = await response.json();
@@ -19,8 +19,20 @@ function GraphOrders(props) {
     );
   };
 
+  const getMonthData = () => {
+    fetch("http://127.0.0.1:8000/analytics/get_monthly_quantities").then(
+      async (response) => {
+        const data = await response.json();
+        console.log(data);
+        setDate1(data.month);
+        setQuantities(data.quantities);
+      }
+    );
+  };
+
   useEffect(() => {
-    getData();
+    // getDayData();
+    getMonthData();
   }, []);
 
   const series = [
