@@ -3,9 +3,9 @@ import { useState, useEffect } from "react";
 
 import GraphItems from "../components/GraphItems";
 import GraphOrders from "../components/GraphOrders";
-
+import Treemap from "../components/Treemap";
+import Spinner from "../components/Spinner";
 import "./dashboard.css";
-import Spinner from "./site-spinner.png";
 
 function Dashboard(props) {
   const [showSpinner, setShowSpinner] = useState(false);
@@ -47,19 +47,15 @@ function Dashboard(props) {
         <div className="body">
           {/* {props.hasUploaded && ( */}
           <>
-            <div className="main data">
-              <GraphOrders />
-            </div>
+            <div className="main data">{/* <GraphOrders /> */}</div>
             <div className="insights">
-              <GraphItems />
+              <Treemap />
             </div>
           </>
           {/* )} */}
         </div>
 
-        {showSpinner && (
-          <img className="register body spinner" src={Spinner} alt="spinner" />
-        )}
+        {showSpinner && <Spinner />}
       </div>
     </div>
   );

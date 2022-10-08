@@ -1,8 +1,8 @@
 import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Spinner from "../components/Spinner";
 
-import Spinner from "./site-spinner.png";
 import "./auth.css";
 
 function Auth(props) {
@@ -97,13 +97,7 @@ function Auth(props) {
             <span className="error">Passwords don't match, try again</span>
           )}
           <button type="submit">Register</button>
-          {isCorrect && (
-            <img
-              className="register body spinner"
-              src={Spinner}
-              alt="spinner"
-            />
-          )}
+          {isCorrect && <Spinner />}
         </form>
       </div>
     </div>
