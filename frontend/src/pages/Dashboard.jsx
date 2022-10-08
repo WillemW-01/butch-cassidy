@@ -9,6 +9,7 @@ import Spinner from "../components/Spinner";
 import icon from "./add-panel.svg";
 
 import "./dashboard.css";
+import GraphSales from "../components/GraphSales";
 
 function Dashboard(props) {
   const [showSpinner, setShowSpinner] = useState(false);
@@ -61,7 +62,9 @@ function Dashboard(props) {
               <div className="main graph one">
                 <GraphOrders title="Quantities Sold" />
               </div>
-              <div className="main graph two">Graph2</div>
+              <div className="main graph two">
+                <GraphSales title="Sales" />
+              </div>
             </div>
             <div className="section header">Insights</div>
             <div className="insights">

@@ -4,33 +4,47 @@ import ReactApexChart from "react-apexcharts";
 
 function GraphOrders(props) {
   const [date1, setDate1] = React.useState([]);
-  const [orders1, setOrders1] = React.useState([]);
+  const [quantities, setQuantities] = React.useState([]);
   const [date2, setDate2] = React.useState("");
   const [orders2, setOrders2] = React.useState([]);
 
-  const getData = () => {
-    fetch("http://127.0.0.1:8000/analytics/monthly_orders1").then(
+  const getDayData = () => {
+    fetch("http://127.0.0.1:8000/analytics/get_daily_quantities").then(
       async (response) => {
         const data = await response.json();
-        setDate1(data.month);
-        setOrders1(data.orders);
+        console.log(data);
+        setDate1(data.day);
+        setQuantities(data.quantities);
       }
     );
+  };
 
-    // fetch("http://127.0.0.1:8000/analytics/monthly_orders2").then(
-    //   async (response) => {
-    //     const data = await response.json();
-    //     console.log(data);
-    //     setDate2(data.month);
-    //     setOrders2(data.orders);
-    //   }
-    // );
+  const getMonthData = () => {
+    fetch("http://127.0.0.1:8000/analytics/get_monthly_quantities").then(
+      async (response) => {
+        const data = await response.json();
+        console.log(data);
+        setDate1(data.month);
+        setQuantities(data.quantities);
+      }
+    );
   };
 
   useEffect(() => {
-    getData();
+    // getDayData();
+    getMonthData();
   }, []);
 
+  const series = [
+    {
+      name: "Quantity Sold",
+      data: quantities,
+    },
+    // {
+    //   name: "Orders",
+    //   data: orders2,
+    // },
+  ];
   const options = {
     dataLabels: {
       enabled: false,
@@ -40,9 +54,37 @@ function GraphOrders(props) {
       },
     },
 
+    annotations: {
+      xaxis: [
+        {
+          x: new Date(date1[date1.length - 13]).getTime(),
+          borderColor: "#999",
+          yAxisIndex: 0,
+          label: {
+            show: true,
+            text: "Forecast Start",
+            style: {
+              color: "#fff",
+              background: "#775DD0",
+            },
+          },
+        },
+      ],
+    },
+
+    tooltip: {
+      x: {
+        format: "dd MMM yyyy",
+      },
+    },
+
     stroke: {
+      show: true,
       curve: "smooth",
-      colors: "#00000",
+      lineCap: "butt",
+      colors: undefined,
+      width: 2,
+      dashArray: 0,
     },
     xaxis: {
       type: "datetime",
@@ -69,14 +111,6 @@ function GraphOrders(props) {
         stops: [0, 100, 100, 100],
       },
     },
-
-    plotOptions: {
-      bar: {
-        horizontal: false,
-        columnWidth: "55%",
-        endingShape: "rounded",
-      },
-    },
     forecastDataPoints: {
       count: 12,
       fillOpacity: 0.5,
@@ -91,12 +125,7 @@ function GraphOrders(props) {
       <ReactApexChart
         className="apex graph"
         options={options}
-        series={[
-          {
-            name: "Orders",
-            data: orders1,
-          },
-        ]}
+        series={series}
         type="area"
         width={700}
         height={360}

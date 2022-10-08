@@ -9,5 +9,6 @@ frontend/node_modules
 .env.production.local
 
 venv/
+env/
 backend/*/__pycache__/
 backend/*/migrations/
