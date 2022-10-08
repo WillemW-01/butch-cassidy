@@ -1,0 +1,54 @@
+.options {
+  display: flex;
+  margin-top: 10px;
+  gap: 20px;
+}
+
+.options.group {
+  position: relative;
+  border-radius: 7px;
+  font-size: 20px;
+  padding: 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  border-bottom: 3px solid black;
+}
+
+.options.group:hover {
+  background: rgb(231, 230, 237);
+}
+
+.options.group label {
+  text-align: center;
+  cursor: pointer;
+  height: 30px;
+  width: 100px;
+}
+
+.button.group {
+  position: absolute;
+  top: 120%;
+  gap: 10px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+  gap: 5px;
+}
+
+.button.group button {
+  font-size: 14px;
+  border: 1px solid rgb(35, 28, 75);
+  background: rgb(35, 28, 75);
+  color: white;
+  cursor: pointer;
+  width: 100px;
+  padding: 10px;
+  border-radius: 7px;
+}
+
+.button.group button:hover {
+  background: rgb(69, 56, 146);
+  border: 1px solid rgb(69, 56, 146);
+}

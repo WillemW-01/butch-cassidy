@@ -108,21 +108,19 @@
 .statbar.item {
   padding: 10px;
   border-radius: 15px;
-  background: rgb(35, 28, 75);
   height: 50px;
-  border: 1px solid black;
-  color: white;
-  box-shadow: rgba(0, 0, 0, 0.409) 1px 1px 10px;
+  /* border: 1px solid black; */
+  box-shadow: rgba(0, 0, 0, 0.55) 1px 1px 10px;
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
   transition: 200ms;
+  font-size: 20px;
 }
 
 .statbar.item:hover {
   transform: translate(2px, 2px);
-  background-color: rgb(62, 53, 113);
 }
 
 /* main data */

@@ -3,13 +3,14 @@ import { useState, useEffect } from "react";
 import ReactApexChart from "react-apexcharts";
 import Spinner from "./Spinner";
 
-function Treemap() {
+function Treemap(props) {
   const [graphData, setGraphData] = useState([]);
   const [showGraph, setShowGraph] = useState(false);
 
   const format = (data) => {
     if (data && graphData.length === 0) {
-      const { items, quantity } = data.items;
+      const items = data.items;
+      const quantity = data.quantity;
       const tempFormat = items.map((item, index) => {
         return {
           x: item,
@@ -26,6 +27,7 @@ function Treemap() {
     fetch("http://127.0.0.1:8000/analytics/monthly_items").then(
       async (response) => {
         const data = await response.json();
+        console.log(data);
         format(data, 10);
       }
     );
@@ -55,18 +57,24 @@ function Treemap() {
       type: "treemap",
     },
     title: {
-      text: "Order size Treemap",
+      text: "",
     },
+    colors: ["#231c4b"],
   };
 
   return (
-    <>
-      {showGraph ? (
-        <ReactApexChart options={options} series={series} type="treemap" />
-      ) : (
-        <Spinner />
-      )}
-    </>
+    <div className="chart">
+      <h2>{props.title}</h2>
+
+      <ReactApexChart
+        className="apex graph"
+        options={options}
+        series={series}
+        type="treemap"
+        width={500}
+        height={250}
+      />
+    </div>
   );
 }
 
