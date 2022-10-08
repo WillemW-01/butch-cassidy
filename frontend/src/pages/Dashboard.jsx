@@ -6,6 +6,7 @@ import GraphOrders from "../components/GraphOrders";
 import Treemap from "../components/Treemap";
 import Spinner from "../components/Spinner";
 import "./dashboard.css";
+import GraphSales from "../components/GraphSales";
 
 function Dashboard(props) {
   const [showSpinner, setShowSpinner] = useState(false);
@@ -44,14 +45,29 @@ function Dashboard(props) {
           </div>
         </div>
 
-        <div className="body">
+        <div className="data body">
           {/* {props.hasUploaded && ( */}
           <>
-            <div className="main data">
-              <GraphOrders />
+            <div className="statbar">
+              <div className="statbar item">StatItem</div>
+              <div className="statbar item">StatItem</div>
+              <div className="statbar item">StatItem</div>
             </div>
+            <div className="section header">Main graphs</div>
+            <div className="main">
+              <div className="main graph one">
+                <GraphOrders title="Quantities Sold" />
+              </div>
+              <div className="main graph two">
+                <GraphSales title="Sales" />
+              </div>
+            </div>
+            <div className="section header">Insights</div>
             <div className="insights">
-              <Treemap />
+              <div className="insight item">Insight1</div>
+              <div className="insight item">Insight2</div>
+              <div className="insight item">Insight3</div>
+              {/* <Treemap /> */}
             </div>
           </>
           {/* )} */}

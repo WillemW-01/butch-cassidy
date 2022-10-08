@@ -9,4 +9,5 @@ urlpatterns = [
     path("monthly_items", views.monthly_items),
     path("get_daily_orders", views.get_daily_orders),
     path("get_daily_quantities", views.get_daily_quantities),
+    path("calculate_sales", views.calculate_sales),
 ]

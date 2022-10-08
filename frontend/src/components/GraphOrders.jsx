@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../App.css";
 import ReactApexChart from "react-apexcharts";
 
-function GraphOrders() {
+function GraphOrders(props) {
   const [date1, setDate1] = React.useState([]);
   const [quantities, setQuantities] = React.useState([]);
   const [date2, setDate2] = React.useState("");
@@ -79,7 +79,7 @@ function GraphOrders() {
       categories: date1,
     },
     title: {
-      text: "Quantity Sold",
+      text: "",
       align: "center",
       margin: 20,
       offsetY: 20,
@@ -113,42 +113,19 @@ function GraphOrders() {
       strokeWidth: undefined,
       dashArray: 6,
     },
-    // xaxis: {
-    //   type: "datetime",
-    //   categories: date2,
-    // },
   };
 
   return (
-    <div
-      style={{
-        backgroundColor: "white",
-        textAlign: "center",
-        // padding: "5px",
-        // borderRadius: "5px",
-      }}
-    >
-      <br />
-      <h2>Restaurant Data</h2>
-      <br />
-
-      <div className="toolbar">
-        <button>2018</button>
-        <ReactApexChart
-          options={options}
-          series={series}
-          type="area"
-          height={500}
-          width={1000}
-        />
-      </div>
-      <br />
-      {/* <ReactApexChart
+    <div className="chart">
+      <h2>{props.title}</h2>
+      <ReactApexChart
+        className="apex graph"
         options={options}
         series={series}
-        type="bar"
-        height={500}
-      /> */}
+        type="area"
+        width={700}
+        height={360}
+      />
     </div>
   );
 }

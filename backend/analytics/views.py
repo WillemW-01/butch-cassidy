@@ -45,12 +45,10 @@ def get_daily_orders(request):
 
 def get_daily_quantities(request):
     if request.method == "GET":
-
-        orders1["Order Date"] = pd.to_datetime(orders1["Order Date"]).dt.strftime(
-            "%Y-%m-%d"
-        )
-        orders1["Quantity"] = orders1["Quantity"].astype(int)
-        o = orders1.groupby(["Order Date"])["Quantity"].sum().to_dict()
+        o = orders1
+        o["Order Date"] = pd.to_datetime(o["Order Date"]).dt.strftime("%Y-%m-%d")
+        o["Quantity"] = o["Quantity"].astype(int)
+        o = o.groupby(["Order Date"])["Quantity"].sum().to_dict()
 
         keys = str(list(o.keys()))
         values = list(o.values())
@@ -58,6 +56,25 @@ def get_daily_quantities(request):
         (keys, values) = zip(*o.items())
 
         return JsonResponse({"day": keys, "quantities": values})
+
+
+def calculate_sales(request):
+    if request.method == "GET":
+        o = orders1
+        o["Product Price"] = o["Quantity"].astype(float) * o["Product Price"].astype(
+            float
+        )
+
+        # format to two decimals
+        o["Order Date"] = pd.to_datetime(o["Order Date"]).dt.strftime("%Y-%m")
+
+        ob = o.groupby(["Order Date"])["Product Price"].sum().to_dict()
+
+        keys = str(list(ob.keys()))
+        values = list(ob.values())
+        values = list(np.around(values, 2))
+
+        return JsonResponse({"month": keys, "sales": values})
 
 
 def monthly_orders1(request):

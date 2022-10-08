@@ -9,12 +9,7 @@ function Treemap() {
 
   const format = (data) => {
     if (data && graphData.length === 0) {
-      const items = data.items;
-      const quantity = data.quantity;
-      console.log(items);
-      console.log(quantity);
-      console.log("Trying to make a treemap");
-
+      const { items, quantity } = data.items;
       const tempFormat = items.map((item, index) => {
         return {
           x: item,
@@ -23,6 +18,7 @@ function Treemap() {
       });
 
       setGraphData(tempFormat);
+      setShowGraph(true);
     }
   };
 
@@ -30,8 +26,7 @@ function Treemap() {
     fetch("http://127.0.0.1:8000/analytics/monthly_items").then(
       async (response) => {
         const data = await response.json();
-        console.log(data);
-        format(data);
+        format(data, 10);
       }
     );
   };
@@ -39,10 +34,6 @@ function Treemap() {
   useEffect(() => {
     getData();
   }, []);
-
-  useEffect(() => {
-    setShowGraph(true);
-  }, [graphData]);
 
   const series = [
     {
@@ -61,7 +52,6 @@ function Treemap() {
       show: false,
     },
     chart: {
-      height: 1000,
       type: "treemap",
     },
     title: {
@@ -71,15 +61,10 @@ function Treemap() {
 
   return (
     <>
-      {!showGraph && <Spinner />}
-      {showGraph && (
-        <ReactApexChart
-          options={options}
-          series={series}
-          type="treemap"
-          height={500}
-          width={1000}
-        />
+      {showGraph ? (
+        <ReactApexChart options={options} series={series} type="treemap" />
+      ) : (
+        <Spinner />
       )}
     </>
   );
