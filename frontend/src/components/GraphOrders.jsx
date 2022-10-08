@@ -102,7 +102,7 @@ function GraphOrders(props) {
       type: "gradient",
       gradient: {
         shade: "dark",
-        gradientToColors: ["#38E54D"],
+        gradientToColors: ["#000000", "#231c4b"],
         shadeIntensity: 1,
         type: "horizontal",
         opacityFrom: 1,

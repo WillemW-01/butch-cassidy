@@ -59,6 +59,7 @@ function Treemap(props) {
     title: {
       text: "",
     },
+    colors: ["#231c4b"],
   };
 
   return (

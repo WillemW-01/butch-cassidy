@@ -10,8 +10,13 @@ function TimeOptions(props) {
   const [futureOpen, setFutureOpen] = useState(false);
   const [futureValue, setFutureValue] = useState(12);
 
-  const handleSubmit = () => {
-    console.log(`Passing: ${pastValue}, ${futureValue}`);
+  const [intervalOpen, setIntervalOpen] = useState(false);
+  const [intervalValue, setIntervalValue] = useState("week");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    e.target.style["background-color"] = "#453892";
+    e.target.style["border-color"] = "#453892";
     props.submit(pastValue, futureValue);
   };
 
@@ -22,6 +27,7 @@ function TimeOptions(props) {
           onClick={() => {
             setPastOpen(!pastOpen);
             setFutureOpen(false);
+            setIntervalOpen(false);
           }}
         >
           Past
@@ -48,9 +54,10 @@ function TimeOptions(props) {
           onClick={() => {
             setFutureOpen(!futureOpen);
             setPastOpen(false);
+            setIntervalOpen(false);
           }}
         >
-          Future
+          Predict
         </label>
         {futureOpen && (
           <div className="button group">
@@ -65,6 +72,33 @@ function TimeOptions(props) {
             </button>
             <button type="submit" onClick={() => setFutureValue(12)}>
               12 Months
+            </button>
+          </div>
+        )}
+      </div>
+      <div className="options group">
+        <label
+          onClick={() => {
+            setIntervalOpen(!intervalOpen);
+            setPastOpen(false);
+            setFutureOpen(false);
+          }}
+        >
+          Interval
+        </label>
+        {intervalOpen && (
+          <div className="button group">
+            <button type="submit" onClick={() => setIntervalValue("day")}>
+              Daily
+            </button>
+            <button type="submit" onClick={() => setFutureValue("week")}>
+              Weekly
+            </button>
+            <button type="submit" onClick={() => setFutureValue("month")}>
+              Monthly
+            </button>
+            <button type="submit" onClick={() => setFutureValue("year")}>
+              Yearly
             </button>
           </div>
         )}
