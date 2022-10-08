@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "../App.css";
 import ReactApexChart from "react-apexcharts";
 
@@ -8,7 +8,28 @@ function GraphOrders() {
   const [date2, setDate2] = React.useState("");
   const [orders2, setOrders2] = React.useState([]);
 
-  function getData() {
+  const [quantities] = useState([218, 149, 184, 55, 84, 31, 70]);
+  const [items] = useState([
+    "New Delhi",
+    "Kolkata",
+    "Mumbai",
+    "Ahmedabad",
+    "Bangaluru",
+    "Pune",
+    "Chennai",
+  ]);
+
+  const format = () => {
+    const formatted = items.map((item, index) => {
+      return {
+        x: item,
+        y: quantities[index],
+      };
+    });
+    console.log(formatted);
+  };
+
+  const getData = () => {
     fetch("http://127.0.0.1:8000/analytics/monthly_orders1").then(
       async (response) => {
         const data = await response.json();
@@ -18,15 +39,15 @@ function GraphOrders() {
       }
     );
 
-    fetch("http://127.0.0.1:8000/analytics/monthly_orders2").then(
-      async (response) => {
-        const data = await response.json();
-        console.log(data);
-        setDate2(data.month);
-        setOrders2(data.orders);
-      }
-    );
-  }
+    // fetch("http://127.0.0.1:8000/analytics/monthly_orders2").then(
+    //   async (response) => {
+    //     const data = await response.json();
+    //     console.log(data);
+    //     setDate2(data.month);
+    //     setOrders2(data.orders);
+    //   }
+    // );
+  };
 
   useEffect(() => {
     getData();
