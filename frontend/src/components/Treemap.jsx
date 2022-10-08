@@ -45,10 +45,13 @@ function Treemap(props) {
   const options = {
     plotOptions: {
       treemap: {
-        distributed: false,
+        distributed: true,
         enableShades: true,
-        shadeIntensity: 0.5,
+        shadeIntensity: 0.1,
       },
+    },
+    dataLabels: {
+      enabled: true,
     },
     legend: {
       show: false,
@@ -59,7 +62,7 @@ function Treemap(props) {
     title: {
       text: "",
     },
-    colors: ["#231c4b"],
+    colors: ["#231c4b", "#3b3b98", "#5e60ce", "#8593f3", "#a5b4fb", "#d0d9ff"],
   };
 
   return (

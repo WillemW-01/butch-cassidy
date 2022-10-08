@@ -90,11 +90,32 @@ def calculate_sales(request):
         return JsonResponse({"month": keys, "sales": values})
 
 
+def search_items(request):
+    orders1 = pd.read_csv("../data/restaurant-1-orders.csv")
+    if request.method == "POST":
+
+        json_data = json.loads(request.body)
+        search_key = json_data["search_key"]
+
+        orders1["Item Name"] = orders1["Item Name"][
+            orders1["Item Name"].str.lower().str.contains(search_key)
+        ]
+        grouped = orders1.groupby(["Item Name"])["Quantity"].sum()
+
+        grouped.sort_values(ascending=False, inplace=True)
+        grouped = grouped.head(15)
+        (keys, values) = zip(*grouped.items())
+
+        return JsonResponse({"items": keys, "quantity": values})
+
+
 def monthly_items(request):
     orders1 = pd.read_csv("../data/restaurant-1-orders.csv")
     if request.method == "GET":
-
         grouped = orders1.groupby(["Item Name"])["Quantity"].sum()
+
+        grouped.sort_values(ascending=False, inplace=True)
+        grouped = grouped.head(15)
         (keys, values) = zip(*grouped.items())
 
         return JsonResponse({"items": keys, "quantity": values})

@@ -70,7 +70,7 @@ function Dashboard(props) {
             <div className="insights">
               <div className="insight item">Combos</div>
               <div className="insight item">
-                <Treemap title="Top 15 Items" />
+                <Treemap title="Item Distribution" />
               </div>
               <div className="insight item">Insight3</div>
             </div>

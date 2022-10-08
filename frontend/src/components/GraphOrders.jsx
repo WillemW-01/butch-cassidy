@@ -94,7 +94,7 @@ function GraphOrders(props) {
       curve: "smooth",
       lineCap: "butt",
       colors: undefined,
-      width: 2,
+      width: 0.5,
       dashArray: 0,
     },
     xaxis: {
