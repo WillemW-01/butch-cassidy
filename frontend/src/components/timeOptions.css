@@ -39,8 +39,8 @@
 
 .button.group button {
   font-size: 14px;
-  border: 1px solid rgb(35, 28, 75);
-  background: rgb(35, 28, 75);
+  border: 1px solid #231c4b;
+  background: #231c4b;
   color: white;
   cursor: pointer;
   width: 100px;
@@ -49,6 +49,6 @@
 }
 
 .button.group button:hover {
-  background: rgb(69, 56, 146);
-  border: 1px solid rgb(69, 56, 146);
+  background: #453892;
+  border: 1px solid #453892;
 }
