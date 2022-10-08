@@ -43,6 +43,23 @@ def get_daily_orders(request):
         return JsonResponse({"day": keys, "orders": values})
 
 
+def get_daily_quantities(request):
+    if request.method == "GET":
+
+        orders1["Order Date"] = pd.to_datetime(orders1["Order Date"]).dt.strftime(
+            "%Y-%m-%d"
+        )
+        orders1["Quantity"] = orders1["Quantity"].astype(int)
+        o = orders1.groupby(["Order Date"])["Quantity"].sum().to_dict()
+
+        keys = str(list(o.keys()))
+        values = list(o.values())
+
+        (keys, values) = zip(*o.items())
+
+        return JsonResponse({"day": keys, "quantities": values})
+
+
 def monthly_orders1(request):
     if request.method == "GET":
         # o = orders[["Order ID", "Order Date"]].drop_duplicates(
