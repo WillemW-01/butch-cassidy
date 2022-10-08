@@ -93,9 +93,8 @@ def calculate_sales(request):
 def search_items(request):
     orders1 = pd.read_csv("../data/restaurant-1-orders.csv")
     if request.method == "POST":
-
         json_data = json.loads(request.body)
-        search_key = json_data["search_key"]
+        search_key = json_data["key"]
 
         orders1["Item Name"] = orders1["Item Name"][
             orders1["Item Name"].str.lower().str.contains(search_key)
