@@ -7,4 +7,5 @@ urlpatterns = [
     path("get_daily_quantities", views.get_daily_quantities),
     path("calculate_sales", views.calculate_sales),
     path("get_monthly_quantities", views.get_monthly_quantities),
+    path("get_weekly_quantities", views.get_weekly_quantities),
 ]

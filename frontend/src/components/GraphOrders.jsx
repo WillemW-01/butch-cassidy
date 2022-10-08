@@ -33,9 +33,21 @@ function GraphOrders(props) {
     );
   };
 
+  const getWeeklyData = () => {
+    fetch("http://127.0.0.1:8000/analytics/get_weekly_quantities").then(
+      async (response) => {
+        const data = await response.json();
+        console.log(data);
+        setDate1(data.week);
+        setQuantities(data.quantities);
+      }
+    );
+  };
+
   useEffect(() => {
     // getDayData();
-    getMonthData();
+    // getMonthData();
+    getWeeklyData();
   }, []);
 
   const series = [
