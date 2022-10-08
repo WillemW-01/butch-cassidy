@@ -47,7 +47,7 @@ def calculate_sales(request):
 
         ob = orders1.groupby(["Order Date"])["Product Price"].sum().to_dict()
 
-        keys = str(list(ob.keys()))
+        keys = list(ob.keys())
         values = list(ob.values())
         values = list(np.around(values, 2))
 

@@ -18,99 +18,43 @@ function GraphSales(props) {
   };
 
   useEffect(() => {
-    // getData();
+    getData();
   }, []);
 
+  var series = [
+    {
+      name: "Sales",
+      data: sales,
+    },
+  ];
+
   var options = {
-    series: [
-      {
-        name: "Sales",
-        type: "column",
-        data: sales,
-      },
-      // {
-      //   name: "Revenue",
-      //   type: "line",
-      //   data: [20, 29, 37, 36, 44, 45, 50, 58],
-      // },
-    ],
     chart: {
-      height: 350,
-      type: "line",
-      stacked: false,
+      type: "bar",
+    },
+    plotOptions: {
+      bar: {
+        borderRadius: 4,
+        horizontal: true,
+      },
     },
     dataLabels: {
       enabled: false,
     },
-    stroke: {
-      width: [1, 1, 4],
-    },
-    title: {
-      text: "",
-      align: "left",
-      offsetX: 110,
-    },
     xaxis: {
+      type: "datetime",
       categories: date1,
     },
-    yaxis: [
-      {
-        axisTicks: {
-          show: true,
+    yaxis: {
+      labels: {
+        formatter: function (value) {
+          return "£" + value;
         },
-        axisBorder: {
-          show: true,
-          color: "#008FFB",
-        },
-        labels: {
-          style: {
-            colors: "#008FFB",
-          },
-        },
-        title: {
-          text: "x 1",
-          style: {
-            color: "#008FFB",
-          },
-        },
-        tooltip: {
-          enabled: true,
-        },
-      },
-      {
-        seriesName: "Income",
-        opposite: true,
-        axisTicks: {
-          show: true,
-        },
-        axisBorder: {
-          show: true,
-          color: "#00E396",
-        },
-        labels: {
-          style: {
-            colors: "#00E396",
-          },
-        },
-        title: {
-          text: "Average Revenue",
-          style: {
-            color: "#00E396",
-          },
-        },
-      },
-    ],
-    tooltip: {
-      fixed: {
-        enabled: true,
-        position: "topLeft", // topRight, topLeft, bottomRight, bottomLeft
-        offsetY: 30,
-        offsetX: 60,
       },
     },
-    legend: {
-      horizontalAlign: "left",
-      offsetX: 40,
+    stroke: {
+      width: 4,
+      curve: "straight",
     },
   };
 
@@ -118,9 +62,10 @@ function GraphSales(props) {
     <div className="chart">
       <h2>{props.title}</h2>
       <ReactApexChart
-        className="apex graph"
+        className="sales graph"
         options={options}
-        series={options.series}
+        series={series}
+        width={500}
       />
     </div>
   );

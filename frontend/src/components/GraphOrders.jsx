@@ -25,7 +25,7 @@ function GraphOrders(props) {
 
   const series = [
     {
-      name: "Orders",
+      name: "Quantity Sold",
       data: quantities,
     },
     // {
@@ -71,7 +71,7 @@ function GraphOrders(props) {
       curve: "smooth",
       lineCap: "butt",
       colors: undefined,
-      width: 3,
+      width: 2,
       dashArray: 0,
     },
     xaxis: {
@@ -97,14 +97,6 @@ function GraphOrders(props) {
         opacityFrom: 1,
         opacityTo: 1,
         stops: [0, 100, 100, 100],
-      },
-    },
-
-    plotOptions: {
-      bar: {
-        horizontal: false,
-        columnWidth: "55%",
-        endingShape: "rounded",
       },
     },
     forecastDataPoints: {
