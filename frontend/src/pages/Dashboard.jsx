@@ -38,7 +38,7 @@ function Dashboard(props) {
     <div className="container">
       <div className="dashboard">
         <div className="header">
-          <img src={icon} width="50px" />
+          <img src={icon} width="50px" alt="logo" />
           <h1>Dashboard</h1>
           <label htmlFor="input">
             Upload your data
@@ -68,10 +68,11 @@ function Dashboard(props) {
             </div>
             <div className="section header">Insights</div>
             <div className="insights">
-              <div className="insight item">Insight1</div>
-              <div className="insight item">Insight2</div>
+              <div className="insight item">Combos</div>
+              <div className="insight item">
+                <Treemap title="Top 15 Items" />
+              </div>
               <div className="insight item">Insight3</div>
-              {/* <Treemap /> */}
             </div>
           </>
           {/* )} */}

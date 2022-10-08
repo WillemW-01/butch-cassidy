@@ -1,0 +1,56 @@
+.options {
+  align-self: flex-start;
+  display: flex;
+  justify-content: flex-start;
+  gap: 20px;
+}
+
+.options.group {
+  border: 1px solid grey;
+  position: relative;
+  background: rgb(210, 210, 210);
+  border-radius: 7px;
+  font-size: 20px;
+  padding: 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.options.group:hover {
+  background: white;
+  border: 1px solid grey;
+}
+
+.options.group label {
+  text-align: center;
+  cursor: pointer;
+  height: 30px;
+  width: 100px;
+}
+
+.button.group {
+  position: absolute;
+  top: 120%;
+  gap: 10px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+  gap: 5px;
+}
+
+.button.group button {
+  font-size: 14px;
+  border: 1px solid grey;
+  cursor: pointer;
+  background: rgb(210, 210, 210);
+  width: 100px;
+  padding: 10px;
+  border-radius: 7px;
+}
+
+.button.group button:hover {
+  background: white;
+  border: 1px solid grey;
+}

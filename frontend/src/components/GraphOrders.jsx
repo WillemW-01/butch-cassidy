@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import "../App.css";
 import ReactApexChart from "react-apexcharts";
+import TimeOptions from "./TimeOptions";
 
 function GraphOrders(props) {
   const [date1, setDate1] = React.useState([]);
   const [quantities, setQuantities] = React.useState([]);
-  const [date2, setDate2] = React.useState("");
-  const [orders2, setOrders2] = React.useState([]);
+
+  const submit = (pastValue, futureValue, dayOrWeekOrMonth) => {
+    console.log(`Got past: ${pastValue} and future: ${futureValue}`);
+  };
 
   const getDayData = () => {
     fetch("http://127.0.0.1:8000/analytics/get_daily_quantities").then(
@@ -40,10 +43,6 @@ function GraphOrders(props) {
       name: "Quantity Sold",
       data: quantities,
     },
-    // {
-    //   name: "Orders",
-    //   data: orders2,
-    // },
   ];
   const options = {
     dataLabels: {
@@ -122,13 +121,14 @@ function GraphOrders(props) {
   return (
     <div className="chart">
       <h2>{props.title}</h2>
+      <TimeOptions submit={submit} />
       <ReactApexChart
         className="apex graph"
         options={options}
         series={series}
         type="area"
         width={700}
-        height={360}
+        height={300}
       />
     </div>
   );
