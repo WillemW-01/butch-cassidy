@@ -6,6 +6,7 @@ import Spinner from "../components/Spinner";
 import icon from "./add-panel.svg";
 import "./dashboard.css";
 import GraphSales from "../components/GraphSales";
+import WeekdayGraph from "../components/WeekdayGraph";
 
 function Dashboard(props) {
   const [showSpinner, setShowSpinner] = useState(false);
@@ -68,7 +69,9 @@ function Dashboard(props) {
               <div className="insight item">
                 <Treemap title="Item Distribution" />
               </div>
-              <div className="insight item">Insight3</div>
+              <div className="insight item">
+                <WeekdayGraph title="Week Days" />
+              </div>
             </div>
           </>
           {/* )} */}

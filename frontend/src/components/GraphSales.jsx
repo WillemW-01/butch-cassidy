@@ -63,6 +63,7 @@ function GraphSales(props) {
     stroke: {
       width: 3,
       curve: "straight",
+      colors: ["#8640BE"],
     },
   };
 
