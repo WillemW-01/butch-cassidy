@@ -1,53 +1,31 @@
 import React, { useState, useEffect } from "react";
-import "../App.css";
 import ReactApexChart from "react-apexcharts";
 import TimeOptions from "./TimeOptions";
+import Spinner from "./Spinner";
+import "../App.css";
 
 function GraphOrders(props) {
-  const [date1, setDate1] = React.useState([]);
-  const [quantities, setQuantities] = React.useState([]);
+  const [date, setDate] = useState([]);
+  const [quantities, setQuantities] = useState([]);
+  const [shouldShow, setShouldShow] = useState(false);
 
-  const submit = (pastValue, futureValue, dayOrWeekOrMonth) => {
-    console.log(`Got past: ${pastValue} and future: ${futureValue}`);
-  };
-
-  const getDayData = () => {
-    fetch("http://127.0.0.1:8000/analytics/get_daily_quantities").then(
-      async (response) => {
-        const data = await response.json();
-        console.log(data);
-        setDate1(data.day);
-        setQuantities(data.quantities);
-      }
+  const submit = (pastValue, futureValue, interval) => {
+    setShouldShow(false);
+    console.log(
+      `Got past: ${pastValue} and future: ${futureValue} and interval: ${interval}`
     );
-  };
-
-  const getMonthData = () => {
-    fetch("http://127.0.0.1:8000/analytics/get_monthly_quantities").then(
-      async (response) => {
-        const data = await response.json();
-        console.log(data);
-        setDate1(data.month);
-        setQuantities(data.quantities);
-      }
-    );
-  };
-
-  const getWeeklyData = () => {
-    fetch("http://127.0.0.1:8000/analytics/get_weekly_quantities").then(
-      async (response) => {
-        const data = await response.json();
-        console.log(data);
-        setDate1(data.week);
-        setQuantities(data.quantities);
-      }
-    );
+    const url = `http://127.0.0.1:8000/analytics/get_${interval}_quantities`;
+    fetch(url).then(async (response) => {
+      const data = await response.json();
+      console.log(data);
+      setDate(data.time);
+      setQuantities(data.quantities);
+      setShouldShow(true);
+    });
   };
 
   useEffect(() => {
-    // getDayData();
-    // getMonthData();
-    getWeeklyData();
+    submit(0, 0, "weekly");
   }, []);
 
   const series = [
@@ -68,7 +46,7 @@ function GraphOrders(props) {
     annotations: {
       xaxis: [
         {
-          x: new Date(date1[date1.length - 13]).getTime(),
+          x: new Date(date[date.length - 13]).getTime(),
           borderColor: "#999",
           yAxisIndex: 0,
           label: {
@@ -99,7 +77,7 @@ function GraphOrders(props) {
     },
     xaxis: {
       type: "datetime",
-      categories: date1,
+      categories: date,
     },
     title: {
       text: "",
@@ -133,15 +111,21 @@ function GraphOrders(props) {
   return (
     <div className="chart">
       <h2>{props.title}</h2>
-      <TimeOptions submit={submit} />
-      <ReactApexChart
-        className="apex graph"
-        options={options}
-        series={series}
-        type="area"
-        width={700}
-        height={300}
-      />
+      {!shouldShow ? (
+        <Spinner type="balls" height={300} />
+      ) : (
+        <>
+          <TimeOptions submit={submit} />
+          <ReactApexChart
+            className="apex graph"
+            options={options}
+            series={series}
+            type="area"
+            width={700}
+            height={300}
+          />
+        </>
+      )}
     </div>
   );
 }

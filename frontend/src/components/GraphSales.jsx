@@ -1,18 +1,23 @@
 import React, { useState, useEffect } from "react";
 import "../App.css";
 import ReactApexChart from "react-apexcharts";
+import TimeOptions from "./TimeOptions";
+import Spinner from "./Spinner";
 
 function GraphSales(props) {
-  const [date1, setDate1] = React.useState([]);
-  const [sales, setSales] = React.useState([]);
+  const [date1, setDate1] = useState([]);
+  const [sales, setSales] = useState([]);
+  const [shouldShow, setShouldShow] = useState(false);
 
   const getData = () => {
+    setShouldShow(false);
     fetch("http://127.0.0.1:8000/analytics/calculate_sales").then(
       async (response) => {
         const data = await response.json();
         console.log(data);
         setDate1(data.month);
         setSales(data.sales);
+        setShouldShow(true);
       }
     );
   };
@@ -61,12 +66,20 @@ function GraphSales(props) {
   return (
     <div className="chart">
       <h2>{props.title}</h2>
-      <ReactApexChart
-        className="sales graph"
-        options={options}
-        series={series}
-        width={500}
-      />
+      {!shouldShow ? (
+        <Spinner type="balls" height={300} />
+      ) : (
+        <>
+          <TimeOptions />
+          <ReactApexChart
+            className="apex graph"
+            options={options}
+            series={series}
+            width={500}
+            height={300}
+          />
+        </>
+      )}
     </div>
   );
 }

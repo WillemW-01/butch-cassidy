@@ -11,13 +11,11 @@ function TimeOptions(props) {
   const [futureValue, setFutureValue] = useState(12);
 
   const [intervalOpen, setIntervalOpen] = useState(false);
-  const [intervalValue, setIntervalValue] = useState("week");
+  const [intervalValue, setIntervalValue] = useState("weekly");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    e.target.style["background-color"] = "#453892";
-    e.target.style["border-color"] = "#453892";
-    props.submit(pastValue, futureValue);
+    props.submit(pastValue, futureValue, intervalValue);
   };
 
   return (
@@ -88,17 +86,14 @@ function TimeOptions(props) {
         </label>
         {intervalOpen && (
           <div className="button group">
-            <button type="submit" onClick={() => setIntervalValue("day")}>
+            <button type="submit" onClick={() => setIntervalValue("daily")}>
               Daily
             </button>
-            <button type="submit" onClick={() => setFutureValue("week")}>
+            <button type="submit" onClick={() => setIntervalValue("weekly")}>
               Weekly
             </button>
-            <button type="submit" onClick={() => setFutureValue("month")}>
+            <button type="submit" onClick={() => setIntervalValue("monthly")}>
               Monthly
-            </button>
-            <button type="submit" onClick={() => setFutureValue("year")}>
-              Yearly
             </button>
           </div>
         )}

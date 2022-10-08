@@ -53,9 +53,9 @@ function Dashboard(props) {
           {/* {props.hasUploaded && ( */}
           <>
             <div className="statbar">
-              <div className="statbar item">StatItem</div>
-              <div className="statbar item">StatItem</div>
-              <div className="statbar item">StatItem</div>
+              <div className="statbar item">Next holiday: Christmas Day</div>
+              <div className="statbar item">Most orders this week: 6</div>
+              <div className="statbar item">Worst performing item: Masala</div>
             </div>
             <div className="section header">Main graphs</div>
             <div className="main">
