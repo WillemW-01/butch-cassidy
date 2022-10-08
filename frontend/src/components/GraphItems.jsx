@@ -7,26 +7,14 @@ function GraphItems() {
   const [quantity, setQuantity] = React.useState([]);
 
   function getData() {
-    const Http = new XMLHttpRequest();
-    const url = "http://127.0.0.1:8000/analytics/monthly_items";
-    Http.open("GET", url);
-    Http.send();
-
-    Http.onreadystatechange = (e) => {
-      console.log(Http.responseText);
-      var text = Http.responseText;
-      var start = text.indexOf("[");
-      var end = text.indexOf("]");
-      var sliced = text.slice(start + 1, end);
-      text = text.substring(end + 1);
-      var list = sliced.split(",");
-      setItems(list);
-      start = text.indexOf("[");
-      end = text.indexOf("]");
-      text = text.slice(start + 1, end);
-      list = text.split(",");
-      setQuantity(list);
-    };
+    fetch("http://127.0.0.1:8000/analytics/monthly_items").then(
+      async (response) => {
+        const data = await response.json();
+        console.log(data);
+        setItems(data.Item);
+        setQuantity(data.Quantity);
+      }
+    );
   }
 
   useEffect(() => {

@@ -3,53 +3,29 @@ import "../App.css";
 import ReactApexChart from "react-apexcharts";
 
 function GraphOrders() {
-  const [date1, setDate1] = React.useState("");
+  const [date1, setDate1] = React.useState([]);
   const [orders1, setOrders1] = React.useState([]);
   const [date2, setDate2] = React.useState("");
   const [orders2, setOrders2] = React.useState([]);
 
   function getData() {
-    const Http = new XMLHttpRequest();
-    const url = "http://127.0.0.1:8000/analytics/monthly_orders1";
-    Http.open("GET", url);
-    Http.send();
+    fetch("http://127.0.0.1:8000/analytics/monthly_orders1").then(
+      async (response) => {
+        const data = await response.json();
+        console.log(data);
+        setDate1(data.month);
+        setOrders1(data.orders);
+      }
+    );
 
-    Http.onreadystatechange = (e) => {
-      // console.log(Http.responseText);
-      var text = Http.responseText;
-      var start = text.indexOf("[");
-      var end = text.indexOf("]");
-      var sliced = text.slice(start + 1, end);
-      text = text.substring(end + 1);
-      var list = sliced.split(",");
-      setDate1(list);
-      start = text.indexOf("[");
-      end = text.indexOf("]");
-      text = text.slice(start + 1, end);
-      list = text.split(",");
-      setOrders1(list);
-    };
-
-    const Http2 = new XMLHttpRequest();
-    const url2 = "http://127.0.0.1:8000/analytics/monthly_orders2";
-    Http2.open("GET", url2);
-    Http2.send();
-
-    Http2.onreadystatechange = (e) => {
-      // console.log(Http.responseText);
-      var text = Http2.responseText;
-      var start = text.indexOf("[");
-      var end = text.indexOf("]");
-      var sliced = text.slice(start + 1, end);
-      text = text.substring(end + 1);
-      var list = sliced.split(",");
-      setDate2(list);
-      start = text.indexOf("[");
-      end = text.indexOf("]");
-      text = text.slice(start + 1, end);
-      list = text.split(",");
-      setOrders2(list);
-    };
+    fetch("http://127.0.0.1:8000/analytics/monthly_orders2").then(
+      async (response) => {
+        const data = await response.json();
+        console.log(data);
+        setDate2(data.month);
+        setOrders2(data.orders);
+      }
+    );
   }
 
   useEffect(() => {

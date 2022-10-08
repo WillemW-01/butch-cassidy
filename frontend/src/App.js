@@ -9,6 +9,7 @@ function App() {
   const [restaurant, setRestaurant] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [hasUploaded, setHasUploaded] = useState(false);
 
   return (
     <div className="body">
@@ -25,7 +26,10 @@ function App() {
               />
             }
           />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route
+            path="/dashboard"
+            element={<Dashboard setHasUploaded={setHasUploaded} />}
+          />
           <Route path="/" element={<Dashboard />} />
         </Routes>
       </BrowserRouter>
