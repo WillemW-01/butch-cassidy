@@ -5,6 +5,9 @@ import GraphItems from "../components/GraphItems";
 import GraphOrders from "../components/GraphOrders";
 import Treemap from "../components/Treemap";
 import Spinner from "../components/Spinner";
+
+import icon from "./add-panel.svg";
+
 import "./dashboard.css";
 
 function Dashboard(props) {
@@ -34,6 +37,7 @@ function Dashboard(props) {
     <div className="container">
       <div className="dashboard">
         <div className="header">
+          <img src={icon} width="50px" />
           <h1>Dashboard</h1>
           <label htmlFor="input">
             Upload your data
