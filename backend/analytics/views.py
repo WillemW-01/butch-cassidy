@@ -49,6 +49,26 @@ def get_monthly_quantities(request):
         return JsonResponse({"month": keys, "quantities": values})
 
 
+def get_weekly_quantities(request):
+    orders1 = pd.read_csv("../data/restaurant-1-orders.csv")
+    if request.method == "GET":
+        o = orders1.copy(deep=True)
+        o["Order Date"] = pd.to_datetime(o["Order Date"])
+        o["Weekly"] = o["Order Date"].apply(
+            lambda x: x - pd.Timedelta(days=x.weekday())
+        )
+        o["Weekly"] = o["Weekly"].dt.strftime("%Y-%m-%d")
+        o["Quantity"] = o["Quantity"].astype(int)
+        o = o.groupby(["Weekly"])["Quantity"].sum().to_dict()
+
+        keys = str(list(o.keys()))
+        values = list(o.values())
+
+        (keys, values) = zip(*o.items())
+
+        return JsonResponse({"week": keys, "quantities": values})
+
+
 def calculate_sales(request):
     orders1 = pd.read_csv("../data/restaurant-1-orders.csv")
     if request.method == "GET":
