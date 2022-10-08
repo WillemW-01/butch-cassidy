@@ -30,24 +30,7 @@ def get_daily_quantities(request):
 
         (keys, values) = zip(*o.items())
 
-        return JsonResponse({"day": keys, "quantities": values})
-
-
-def get_monthly_quantities(request):
-    orders1 = pd.read_csv("../data/restaurant-1-orders.csv")
-    if request.method == "GET":
-        o = orders1.copy(deep=True)
-        o["Order Date"] = pd.to_datetime(o["Order Date"]).dt.strftime("%Y-%m")
-        o["Quantity"] = o["Quantity"].astype(int)
-        o = o.groupby(["Order Date"])["Quantity"].sum().to_dict()
-
-        keys = str(list(o.keys()))
-        values = list(o.values())
-
-        (keys, values) = zip(*o.items())
-
-        return JsonResponse({"month": keys, "quantities": values})
-
+        return JsonResponse({"time": keys, "quantities": values})
 
 def get_weekly_quantities(request):
     orders1 = pd.read_csv("../data/restaurant-1-orders.csv")
@@ -66,7 +49,24 @@ def get_weekly_quantities(request):
 
         (keys, values) = zip(*o.items())
 
-        return JsonResponse({"week": keys, "quantities": values})
+        return JsonResponse({"time": keys, "quantities": values})
+    
+def get_monthly_quantities(request):
+    orders1 = pd.read_csv("../data/restaurant-1-orders.csv")
+    if request.method == "GET":
+        o = orders1.copy(deep=True)
+        o["Order Date"] = pd.to_datetime(o["Order Date"]).dt.strftime("%Y-%m")
+        o["Quantity"] = o["Quantity"].astype(int)
+        o = o.groupby(["Order Date"])["Quantity"].sum().to_dict()
+
+        keys = str(list(o.keys()))
+        values = list(o.values())
+
+        (keys, values) = zip(*o.items())
+
+        return JsonResponse({"time": keys, "quantities": values})
+
+
 
 
 def calculate_sales(request):

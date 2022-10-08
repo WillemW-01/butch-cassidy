@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../App.css";
 import ReactApexChart from "react-apexcharts";
+import TimeOptions from "./TimeOptions";
 
 function GraphSales(props) {
   const [date1, setDate1] = React.useState([]);
@@ -61,8 +62,9 @@ function GraphSales(props) {
   return (
     <div className="chart">
       <h2>{props.title}</h2>
+      <TimeOptions />
       <ReactApexChart
-        className="sales graph"
+        className="apex graph"
         options={options}
         series={series}
         width={500}

@@ -193,3 +193,7 @@
   margin: 0;
   padding: 0;
 }
+
+.apex.graph {
+  z-index: 0;
+}
