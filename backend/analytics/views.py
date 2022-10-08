@@ -1,7 +1,7 @@
 from tokenize import group
 from django.shortcuts import render
 from django.http import JsonResponse
-
+from django.views.decorators.csrf import csrf_exempt
 import json
 import pandas as pd
 import numpy as np
@@ -136,13 +136,12 @@ def calculate_monthly_sales(request):
         return JsonResponse({"time": keys, "sales": values})
 
 
+@csrf_exempt
 def search_items(request):
     orders1 = pd.read_csv("../data/restaurant-1-orders.csv")
     if request.method == "POST":
-
         json_data = json.loads(request.body)
-        print(json_data)
-        search_key = json_data["search_key"]
+        search_key = json_data["key"]
 
         orders1["Item Name"] = orders1["Item Name"][
             orders1["Item Name"].str.lower().str.contains(search_key)
@@ -161,7 +160,6 @@ def top_items(request):
     if request.method == "GET":
         grouped = orders1.groupby(["Item Name"])["Quantity"].sum()
         grouped.sort_values(ascending=False, inplace=True)
-        grouped = grouped.head(15)
         (keys, values) = zip(*grouped.items())
 
         return JsonResponse({"items": keys, "quantity": values})
