@@ -50,6 +50,13 @@ function Treemap() {
     },
   ];
   const options = {
+    plotOptions: {
+      treemap: {
+        distributed: false,
+        enableShades: true,
+        shadeIntensity: 0.5,
+      },
+    },
     legend: {
       show: false,
     },

@@ -8,45 +8,15 @@ function GraphOrders() {
   const [date2, setDate2] = React.useState("");
   const [orders2, setOrders2] = React.useState([]);
 
-  const [quantities] = useState([218, 149, 184, 55, 84, 31, 70]);
-  const [items] = useState([
-    "New Delhi",
-    "Kolkata",
-    "Mumbai",
-    "Ahmedabad",
-    "Bangaluru",
-    "Pune",
-    "Chennai",
-  ]);
-
-  const format = () => {
-    const formatted = items.map((item, index) => {
-      return {
-        x: item,
-        y: quantities[index],
-      };
-    });
-    console.log(formatted);
-  };
-
   const getData = () => {
-    fetch("http://127.0.0.1:8000/analytics/monthly_orders1").then(
+    fetch("http://127.0.0.1:8000/analytics/get_daily_orders").then(
       async (response) => {
         const data = await response.json();
         console.log(data);
-        setDate1(data.month);
+        setDate1(data.day);
         setOrders1(data.orders);
       }
     );
-
-    // fetch("http://127.0.0.1:8000/analytics/monthly_orders2").then(
-    //   async (response) => {
-    //     const data = await response.json();
-    //     console.log(data);
-    //     setDate2(data.month);
-    //     setOrders2(data.orders);
-    //   }
-    // );
   };
 
   useEffect(() => {
@@ -73,15 +43,19 @@ function GraphOrders() {
     },
 
     stroke: {
+      show: true,
       curve: "smooth",
-      colors: "#00000",
+      lineCap: "butt",
+      colors: undefined,
+      width: 4,
+      dashArray: 0,
     },
     xaxis: {
       type: "datetime",
       categories: date1,
     },
     title: {
-      text: "Orders Per Month",
+      text: "Number of Orders",
       align: "center",
       margin: 20,
       offsetY: 20,

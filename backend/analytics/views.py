@@ -19,8 +19,28 @@ def sign_up(request):
 
 def get_orders(request):
     if request.method == "GET":
-        o = pd.to_datetime(orders1["Order Date"]).dt.strftime("%m,%d,%Y")
-        return JsonResponse(o.to_dict("records"), safe=False)
+        o = pd.to_datetime(orders1["Order Date"])
+        orders1["Order Date"] = o.dt.strftime("%Y-%m-%d")
+        return JsonResponse(orders1.to_dict("records"), safe=False)
+
+
+def get_daily_orders(request):
+    if request.method == "GET":
+        o = orders1[["Order Number", "Order Date"]].drop_duplicates(
+            subset=["Order Number"], keep="first"
+        )
+        o["Order Date"] = pd.to_datetime(o["Order Date"])
+        o = o.sort_values(by="Order Date", ascending=True)
+        o = o["Order Date"].dt.strftime("%Y-%m-%d")
+        # o = o.groupby(['Order Date']).count()
+        counts = o.value_counts().sort_index().to_dict()
+
+        keys = str(list(counts.keys()))
+        values = list(counts.values())
+
+        (keys, values) = zip(*counts.items())
+
+        return JsonResponse({"day": keys, "orders": values})
 
 
 def monthly_orders1(request):
