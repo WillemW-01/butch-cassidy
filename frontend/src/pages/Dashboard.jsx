@@ -44,12 +44,27 @@ function Dashboard(props) {
           </div>
         </div>
 
-        <div className="body">
+        <div className="data body">
           {/* {props.hasUploaded && ( */}
           <>
-            <div className="main data">{/* <GraphOrders /> */}</div>
+            <div className="statbar">
+              <div className="statbar item">StatItem</div>
+              <div className="statbar item">StatItem</div>
+              <div className="statbar item">StatItem</div>
+            </div>
+            <div className="section header">Main graphs</div>
+            <div className="main">
+              <div className="main graph one">
+                <GraphOrders title="Quantities Sold" />
+              </div>
+              <div className="main graph two">Graph2</div>
+            </div>
+            <div className="section header">Insights</div>
             <div className="insights">
-              <Treemap />
+              <div className="insight item">Insight1</div>
+              <div className="insight item">Insight2</div>
+              <div className="insight item">Insight3</div>
+              {/* <Treemap /> */}
             </div>
           </>
           {/* )} */}

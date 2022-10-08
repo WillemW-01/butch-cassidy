@@ -1,25 +1,20 @@
 .dashboard {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   border-radius: 7px;
   background: white;
   width: 90vw;
   height: 90vh;
   box-shadow: rgba(0, 0, 0, 0.413) 1px 1px 10px;
-  overflow-y: auto;
-  /* overflow-x: hidden; */
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-
-  padding: 0px 20px;
+  padding-bottom: 10px;
 }
 
+/* header */
 .header {
-  width: 100%;
+  box-sizing: border-box;
+  margin: 0px 10px;
+  margin-bottom: 10px;
+  padding-left: 15px;
   display: flex;
   border-bottom-width: 3px;
   border-bottom-style: solid;
@@ -31,7 +26,6 @@
   border-right: rgb(35, 28, 75) 3px solid;
   margin-right: 15px;
   padding-right: 15px;
-  height: 50%;
 }
 
 .header label input {
@@ -44,9 +38,16 @@
   margin-right: 15px;
 }
 
+.header label:hover {
+  border-bottom: 1px solid rgb(35, 28, 75);
+}
+
 .header.logout {
   width: auto;
   border-bottom: none;
+  margin: 0;
+  padding: 0;
+  padding-left: 15px;
   height: 50%;
   border-left: rgb(35, 28, 75) 3px solid;
 }
@@ -54,6 +55,143 @@
 .header.logout a {
   text-decoration: none;
   color: rgb(35, 28, 75);
+}
+
+.header.logout a:hover {
+  border-bottom: 1px solid rgb(35, 28, 75);
+}
+
+.section.header {
+  margin: 20px 0px;
+  box-sizing: border-box;
+  font-size: 25px;
   font-weight: bold;
-  padding-left: 15px;
+  display: flex;
+  justify-content: center;
+  border: none;
+}
+
+/* data body */
+.data.body {
+  box-sizing: border-box;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 10px 20px;
+}
+
+.data.body::-webkit-scrollbar {
+  width: 10px;
+}
+
+.data.body::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background: rgb(230, 229, 229);
+}
+
+.data.body::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: rgb(35, 28, 75);
+}
+
+/* statbar */
+.body .statbar {
+  margin: none;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.statbar.item {
+  padding: 10px;
+  border-radius: 15px;
+  background: rgb(35, 28, 75);
+  height: 50px;
+  border: 1px solid black;
+  color: white;
+  box-shadow: rgba(0, 0, 0, 0.409) 1px 1px 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 200ms;
+}
+
+.statbar.item:hover {
+  transform: translate(2px, 2px);
+  background-color: rgb(62, 53, 113);
+}
+
+/* main data */
+.body .main {
+  display: flex;
+  gap: 20px;
+  height: 425px;
+  width: 100%;
+}
+
+.main.graph {
+  height: 425px;
+  border-radius: 15px;
+  padding: 10px;
+  box-sizing: border-box;
+  box-shadow: rgba(0, 0, 0, 0.271) 1px 1px 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 300ms;
+}
+
+.main.graph:hover {
+  transform: scale3d(1.025, 1.025, 2);
+}
+
+.main.graph.one {
+  flex: 6;
+}
+
+.main.graph.two {
+  flex: 4;
+}
+
+.insights {
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+  min-height: 350px;
+  gap: 20px;
+}
+
+.insight.item {
+  border-radius: 15px;
+  box-sizing: border-box;
+  padding: 10px;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: rgba(0, 0, 0, 0.271) 1px 1px 10px;
+  transition: 300ms;
+}
+
+.insight.item:hover {
+  transform: scale3d(1.025, 1.025, 2);
+}
+
+.chart {
+  height: 200px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.chart h2 {
+  margin: 0;
+  padding: 0;
 }

@@ -2,38 +2,16 @@ import React, { useState, useEffect } from "react";
 import "../App.css";
 import ReactApexChart from "react-apexcharts";
 
-function GraphOrders() {
+function GraphOrders(props) {
   const [date1, setDate1] = React.useState([]);
   const [orders1, setOrders1] = React.useState([]);
   const [date2, setDate2] = React.useState("");
   const [orders2, setOrders2] = React.useState([]);
 
-  const [quantities] = useState([218, 149, 184, 55, 84, 31, 70]);
-  const [items] = useState([
-    "New Delhi",
-    "Kolkata",
-    "Mumbai",
-    "Ahmedabad",
-    "Bangaluru",
-    "Pune",
-    "Chennai",
-  ]);
-
-  const format = () => {
-    const formatted = items.map((item, index) => {
-      return {
-        x: item,
-        y: quantities[index],
-      };
-    });
-    console.log(formatted);
-  };
-
   const getData = () => {
     fetch("http://127.0.0.1:8000/analytics/monthly_orders1").then(
       async (response) => {
         const data = await response.json();
-        console.log(data);
         setDate1(data.month);
         setOrders1(data.orders);
       }
@@ -53,16 +31,6 @@ function GraphOrders() {
     getData();
   }, []);
 
-  const series = [
-    {
-      name: "Orders",
-      data: orders1,
-    },
-    // {
-    //   name: "Orders",
-    //   data: orders2,
-    // },
-  ];
   const options = {
     dataLabels: {
       enabled: false,
@@ -81,7 +49,7 @@ function GraphOrders() {
       categories: date1,
     },
     title: {
-      text: "Orders Per Month",
+      text: "",
       align: "center",
       margin: 20,
       offsetY: 20,
@@ -115,38 +83,24 @@ function GraphOrders() {
       strokeWidth: undefined,
       dashArray: 6,
     },
-    // xaxis: {
-    //   type: "datetime",
-    //   categories: date2,
-    // },
   };
 
   return (
-    <div
-      style={{
-        backgroundColor: "white",
-        textAlign: "center",
-        // padding: "5px",
-        // borderRadius: "5px",
-      }}
-    >
-      <br />
-      <h2>Restaurant Data</h2>
-      <br />
+    <div className="chart">
+      <h2>{props.title}</h2>
       <ReactApexChart
+        className="apex graph"
         options={options}
-        series={series}
+        series={[
+          {
+            name: "Orders",
+            data: orders1,
+          },
+        ]}
         type="area"
-        height={500}
-        width={1000}
+        width={700}
+        height={360}
       />
-      <br />
-      {/* <ReactApexChart
-        options={options}
-        series={series}
-        type="bar"
-        height={500}
-      /> */}
     </div>
   );
 }
