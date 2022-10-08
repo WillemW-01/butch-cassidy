@@ -67,22 +67,7 @@ def monthly_orders2(request):
 def monthly_items(request):
     if request.method == "GET":
 
-        # get most popular items from orders1
-        o1 = orders1[["Item Name", "Quantity"]]
-        counts1 = o1["Item Name"].value_counts().sort_index().to_dict()
+        grouped = orders1.groupby(["Item Name"])["Quantity"].sum()
+        (keys, values) = zip(*grouped.items())
 
-        (keys1, values1) = zip(*counts1.items())
-
-        # get most popular items from orders2
-        # o2 = orders2[["Item Name", "Quantity"]]
-        # counts2 = o2["Item Name"].value_counts().sort_index().to_dict()
-
-        # (keys2, values2) = zip(*counts2.items())
-
-        # return JsonResponse(
-        #     {"month": keys1, "orders": values1, "month2": keys2, "orders2": values2}
-        # )
-
-        return JsonResponse({"Item": keys1, "Quantity": values1})
-
-        # return JsonResponse({'month': keys1, 'orders': values1, 'month2': keys2, 'orders2': values2})
+        return JsonResponse({"items": keys, "quantity": values})
