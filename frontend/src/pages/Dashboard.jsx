@@ -8,6 +8,7 @@ import bulb from "./bulb.svg";
 import "./dashboard.css";
 import GraphSales from "../components/GraphSales";
 import WeekdayGraph from "../components/WeekdayGraph";
+import Combo from "../components/Combo";
 
 function Dashboard(props) {
   const [showSpinner, setShowSpinner] = useState(false);
@@ -31,7 +32,7 @@ function Dashboard(props) {
       async (response) => {
         const data = await response.json();
         console.log(data);
-        setAverageOrderQuantity(data.average);
+        setAverageOrderQuantity(data.average.toFixed(1));
         setAverageOrderValue(data.sales);
         setShowSpinner(true);
       }
@@ -67,27 +68,27 @@ function Dashboard(props) {
             <>
               <div className="statbar">
                 <div className="statbar item">
-                  <div className="statbar item top">10.4</div>
-                  <div className="statbar item bottom">
-                    expected orders for today
-                  </div>
-                </div>
-                <div className="statbar item">
                   <div className="statbar item top">
                     £{averageOrderValue} | {averageOrderQuantity} items
                   </div>
-                  <div className="statbar item bottom">for average orders</div>
+                  <div className="statbar item bottom">
+                    For an average order
+                  </div>
                 </div>
                 <div className="statbar item">
-                  <div className="statbar item top">10% increase</div>
+                  <div className="statbar item top">Plain naan</div>
+                  <div className="statbar item bottom">Best item yesterday</div>
+                </div>
+                <div className="statbar item">
+                  <div className="statbar item top">10.4</div>
                   <div className="statbar item bottom">
-                    expected orders for Monday
+                    Expected orders for today
                   </div>
                 </div>
                 <div className="statbar item">
                   <div className="statbar item top">10% increase</div>
                   <div className="statbar item bottom">
-                    expected orders for Monday
+                    Expected orders for tomorrow
                   </div>
                 </div>
               </div>
@@ -104,7 +105,9 @@ function Dashboard(props) {
                 <img src={bulb} width="35px" alt="logo" /> Insights
               </div>
               <div className="insights">
-                <div className="insight item">Combos</div>
+                <div className="insight item">
+                  <Combo />
+                </div>
                 <div className="insight item">
                   <Treemap title="Item Distribution" />
                 </div>
