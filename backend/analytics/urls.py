@@ -17,4 +17,5 @@ urlpatterns = [
     path("expected_orders_today", views.expected_orders_today),
     path("search_combos", views.search_combos),
     path("expected_orders_change", views.expected_orders_change),
+    path("best_item", views.best_item),
 ]
