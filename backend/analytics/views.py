@@ -93,7 +93,7 @@ def sign_up(request):
                 column.append(grouped[d])
             else:
                 column.append(0)
-        dic = {"date": date_range, "sales": column}
+        dic = {"date": date_range, "quantity": column}
         p_sales = pd.DataFrame(dic)
         p_sales = p_sales.set_index(p_sales.date)
         p_sales.drop("date", axis=1, inplace=True)
@@ -196,7 +196,8 @@ def calculate_daily_sales(request):
         keys = list(p_sales.index.strftime("%Y-%m-%d")) + list(
             f_sales.index.strftime("%Y-%m-%d")
         )
-        values = list(p_sales.sales) + list(round(f_sales.sales, 1))
+
+        values = list(p_sales.quantity) + list(round(f_sales.quantity, 1))
 
         return JsonResponse(
             {
@@ -206,80 +207,89 @@ def calculate_daily_sales(request):
             }
         )
 
-        orders1["Product Price"] = orders1["Quantity"].astype(float) * orders1[
-            "Product Price"
-        ].astype(float)
-
-        # format to two decimals
-        orders1["Order Date"] = pd.to_datetime(orders1["Order Date"]).dt.strftime(
-            "%Y-%m-%d"
-        )
-
-        ob = orders1.groupby(["Order Date"])["Product Price"].sum().to_dict()
-
-        keys = list(ob.keys())
-        values = list(ob.values())
-        values = list(np.around(values, 2))
-
-        return JsonResponse({"time": keys, "sales": values})
-
 
 def calculate_weekly_sales(request):
-    orders1 = pd.read_csv("../data/restaurant-1-orders.csv")
     if request.method == "GET":
+        global p_sales, f_sales
 
-        orders1["Product Price"] = orders1["Quantity"].astype(float) * orders1[
-            "Product Price"
-        ].astype(float)
+        p = p_sales.copy(deep=True)
+        f = f_sales.copy(deep=True)
 
-        # format to two decimals
-        orders1["Order Date"] = pd.to_datetime(orders1["Order Date"])
-        orders1["Weekly"] = orders1["Order Date"].apply(
-            lambda x: x - pd.Timedelta(days=x.weekday())
+        p["date"] = p.index
+        p["week"] = p["date"].apply(lambda x: x - pd.Timedelta(days=x.weekday()))
+        p["week"] = p["week"].dt.strftime("%Y-%m-%d")
+        p["quantity"] = p["quantity"].astype(int)
+        p = p.groupby(["week"])["quantity"].sum()
+
+        f["date"] = f.index
+        f["week"] = f["date"].apply(lambda x: x - pd.Timedelta(days=x.weekday()))
+        f["week"] = f["week"].dt.strftime("%Y-%m-%d")
+        f["quantity"] = f["quantity"].astype(int)
+        f = f.groupby(["week"])["quantity"].sum()
+
+        pvals = [int(x) for x in p.values]
+        fvals = [float(round(x, 1)) for x in f.values]
+
+        keys = list(p.index) + list(f.index)
+        values = list(pvals) + list(fvals)
+
+        return JsonResponse(
+            {
+                "time": keys,
+                "sales": values,
+                "predict_start": f_quants.index[0].strftime("%Y-%m-%d"),
+            }
         )
-        orders1["Weekly"] = orders1["Weekly"].dt.strftime("%Y-%m-%d")
-
-        ob = orders1.groupby(["Weekly"])["Product Price"].sum().to_dict()
-
-        keys = list(ob.keys())
-        values = list(ob.values())
-        values = list(np.around(values, 2))
-
-        return JsonResponse({"time": keys, "sales": values})
 
 
 def calculate_monthly_sales(request):
-    orders1 = pd.read_csv("../data/restaurant-1-orders.csv")
     if request.method == "GET":
-        orders1["Product Price"] = orders1["Quantity"].astype(float) * orders1[
-            "Product Price"
-        ].astype(float)
+        global p_sales, f_sales
 
-        # format to two decimals
-        orders1["Order Date"] = pd.to_datetime(orders1["Order Date"]).dt.strftime(
-            "%Y-%m"
+        p = p_sales.copy(deep=True)
+        f = f_sales.copy(deep=True)
+
+        p["date"] = p.index
+        p["month"] = p["date"].apply(lambda x: x - pd.Timedelta(days=x.day - 1))
+        p["month"] = p["month"].dt.strftime("%Y-%m")
+        p["quantity"] = p["quantity"].astype(int)
+        p = p.groupby(["month"])["quantity"].sum()
+
+        f["date"] = f.index
+        f["month"] = f["date"].apply(lambda x: x - pd.Timedelta(days=x.day - 1))
+        f["month"] = f["month"].dt.strftime("%Y-%m")
+        f["quantity"] = f["quantity"].astype(int)
+        f = f.groupby(["month"])["quantity"].sum()
+
+        pvals = [int(x) for x in p.values]
+        fvals = [float(round(x, 1)) for x in f.values]
+
+        keys = list(p.index) + list(f.index)
+        values = list(pvals) + list(fvals)
+
+        return JsonResponse(
+            {
+                "time": keys,
+                "sales": values,
+                "predict_start": f_quants.index[0].strftime("%Y-%m-%d"),
+            }
         )
-
-        ob = orders1.groupby(["Order Date"])["Product Price"].sum().to_dict()
-
-        keys = list(ob.keys())
-        values = list(ob.values())
-        values = list(np.around(values, 2))
-
-        return JsonResponse({"time": keys, "sales": values})
 
 
 @csrf_exempt
 def search_items(request):
-    orders1 = pd.read_csv("../data/restaurant-1-orders.csv")
     if request.method == "POST":
+        global main_orders
+
         json_data = json.loads(request.body)
         search_key = json_data["key"]
 
-        orders1["Item Name"] = orders1["Item Name"][
-            orders1["Item Name"].str.lower().str.contains(search_key)
+        orders = main_orders.copy(deep=True)
+
+        orders["Item Name"] = orders["Item Name"][
+            orders["Item Name"].str.lower().str.contains(search_key)
         ]
-        grouped = orders1.groupby(["Item Name"])["Quantity"].sum()
+        grouped = orders.groupby(["Item Name"])["Quantity"].sum()
 
         grouped.sort_values(ascending=False, inplace=True)
         grouped = grouped.head(15)
@@ -289,9 +299,12 @@ def search_items(request):
 
 
 def top_items(request):
-    orders1 = pd.read_csv("../data/restaurant-1-orders.csv")
     if request.method == "GET":
-        grouped = orders1.groupby(["Item Name"])["Quantity"].sum()
+        global main_orders
+
+        orders = main_orders.copy(deep=True)
+
+        grouped = orders.groupby(["Item Name"])["Quantity"].sum()
         grouped.sort_values(ascending=False, inplace=True)
         (keys, values) = zip(*grouped.items())
 
@@ -299,31 +312,37 @@ def top_items(request):
 
 
 def weekday_popularity(request):
-    orders1 = pd.read_csv("../data/restaurant-1-orders.csv")
     if request.method == "GET":
+        global main_orders
+
+        orders = main_orders.copy(deep=True)
+
         # find assign weekday to order_date
-        orders1["Order Date"] = pd.to_datetime(orders1["Order Date"])
-        orders1["Weekday"] = orders1["Order Date"].apply(
+        orders["Order Date"] = pd.to_datetime(orders["Order Date"])
+        orders["Weekday"] = orders["Order Date"].apply(
             lambda x: calendar.day_name[x.weekday()]
         )
 
         # group by weekday and sum quantity
-        grouped = orders1.groupby(["Weekday"])["Quantity"].sum()
+        grouped = orders.groupby(["Weekday"])["Quantity"].sum()
         (keys, values) = zip(*grouped.items())
 
         return JsonResponse({"weekdays": keys, "quantity": values})
 
 
 def average_order(request):
-    orders1 = pd.read_csv("../data/restaurant-1-orders.csv")
     if request.method == "GET":
-        orders1["Order Number"] = orders1["Order Number"]
-        grouped_quantity = orders1.groupby(["Order Number"])["Quantity"].sum()
+        global main_orders
+
+        orders = main_orders.copy(deep=True)
+
+        orders["Order Number"] = orders["Order Number"]
+        grouped_quantity = orders.groupby(["Order Number"])["Quantity"].sum()
         average_quantity = grouped_quantity.mean()
-        orders1["Product Price"] = orders1["Quantity"].astype(float) * orders1[
+        orders["Product Price"] = orders["Quantity"].astype(float) * orders[
             "Product Price"
         ].astype(float)
-        grouped_sales = orders1.groupby(["Order Number"])["Product Price"].sum()
+        grouped_sales = orders.groupby(["Order Number"])["Product Price"].sum()
         # (keys, values) = zip(*grouped_sales.items())
         # return JsonResponse({"order_number": keys, "quantity": values})
         average_quantity = round((grouped_quantity.mean()), 2)
