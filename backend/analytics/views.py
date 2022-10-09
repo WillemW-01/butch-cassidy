@@ -25,21 +25,21 @@ f_orders = pd.DataFrame()
 def sign_up(request):
     if request.method == "POST":
         global main_orders, main_prices, p_quants, f_quants, p_sales, f_sales, p_orders, f_orders
-    
+
         json_data = json.loads(request.body)
         name = json_data["restaurant"].lower()
 
-        if name == "blue billie jeans":
+        if name.lower() == "blue billie jeans":
             main_orders = pd.read_csv("../data/restaurant-1-orders.csv")
             main_prices = pd.read_csv("../data/restaurant-1-products-price.csv")
-        elif name == "red butter bus":
+
+        elif name.lower() == "red butter bus":
             main_orders = pd.read_csv("../data/restaurant-2-orders.csv")
+            main_orders["Order Number"] = main_orders["Order ID"]
             main_prices = pd.read_csv("../data/restaurant-2-products-price.csv")
         else:
             main_orders = pd.read_csv("../data/restaurant-1-orders.csv")
             main_prices = pd.read_csv("../data/restaurant-1-products-price.csv")
-            
-
 
         #################
         # Quantities
@@ -118,9 +118,11 @@ def sign_up(request):
 
         start_date = orders["Order Date"].iloc[0]
         end_date = orders["Order Date"].iloc[-1]
- 
-        orders = orders[['Order Number', 'Order Date']].drop_duplicates(subset=['Order Number'], keep='first')
-        orders = orders['Order Date']
+
+        orders = orders[["Order Number", "Order Date"]].drop_duplicates(
+            subset=["Order Number"], keep="first"
+        )
+        orders = orders["Order Date"]
         grouped = orders.value_counts().sort_index()
 
         date_range = pd.date_range(start_date, end_date, freq="D")
@@ -138,7 +140,7 @@ def sign_up(request):
 
         f_orders = predict(p_orders)
 
-        return JsonResponse({"success":True})
+        return JsonResponse({"success": True})
 
 
 def get_daily_quantities(request):
@@ -430,31 +432,33 @@ def average_order(request):
 
 
 def expected_orders_today(request):
-     if request.method == "GET":
+    if request.method == "GET":
         global f_orders
 
         f = f_orders.copy(deep=True)
 
         f.index = f.index.strftime("%m-%d")
-        tod = date.today().strftime('%m-%d')
+        tod = date.today().strftime("%m-%d")
 
-        return JsonResponse({'prediction':float(round(f.loc[tod], 1))})
+        return JsonResponse({"prediction": float(round(f.loc[tod], 1))})
 
 
 def expected_orders_change(request):
-     if request.method == "GET":
+    if request.method == "GET":
         global f_orders
 
         f = f_orders.copy(deep=True)
 
         f.index = f.index.strftime("%m-%d")
 
-        tod = date.today().strftime('%m-%d')
+        tod = date.today().strftime("%m-%d")
         tom = (date.today() + timedelta(days=1)).strftime("%m-%d")
-        
-        change = round((float(f.loc[tom])-float(f.loc[tod]))/float(f.loc[tod])*100, 1)
 
-        return JsonResponse({'change':change})
+        change = round(
+            (float(f.loc[tom]) - float(f.loc[tod])) / float(f.loc[tod]) * 100, 1
+        )
+
+        return JsonResponse({"change": change})
 
 
 def predict(Y_train):
@@ -622,7 +626,7 @@ def predict(Y_train):
     # 'importance': model.feature_importances_
     # }).sort_values(by='importance', ascending=False)
 
-    return df # df_importances.to_dict('records')
+    return df  # df_importances.to_dict('records')
 
 
 def get_season(now):
