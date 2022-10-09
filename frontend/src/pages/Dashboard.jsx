@@ -1,19 +1,22 @@
 import React from "react";
 import { useState } from "react";
+
 import GraphOrders from "../components/GraphOrders";
 import Treemap from "../components/Treemap";
 import Spinner from "../components/Spinner";
-import icon from "./add-panel.svg";
-import bulb from "./bulb.svg";
-import "./dashboard.css";
 import GraphSales from "../components/GraphSales";
 import WeekdayGraph from "../components/WeekdayGraph";
 import Combo from "../components/Combo";
 
-function Dashboard(props) {
+import icon from "./add-panel.svg";
+import bulb from "./bulb.svg";
+import "./dashboard.css";
+
+function Dashboard() {
+  const [hasUploaded, setHasUploaded] = useState(false);
   const [showSpinner, setShowSpinner] = useState(false);
   const [averageOrder, setAverageOrder] = useState({});
-  const [hasUploaded, setHasUploaded] = useState(false);
+  const [expectedToday, setExpectedToday] = useState(0);
 
   const [statSpinners, setStatSpinners] = useState([
     false,
@@ -45,6 +48,19 @@ function Dashboard(props) {
           value: data.sales,
         });
         updateStatSpinners(0, true);
+      }
+    );
+  };
+
+  const getExpectedToday = () => {
+    setShowSpinner(false);
+    fetch("http://127.0.0.1:8000/analytics/expected_today").then(
+      async (response) => {
+        const data = await response.json();
+        console.log(data);
+
+        setExpectedToday(data.expected);
+        updateStatSpinners(2, true);
       }
     );
   };
