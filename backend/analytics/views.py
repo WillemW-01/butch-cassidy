@@ -1,3 +1,4 @@
+from email import header
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -276,12 +277,28 @@ def calculate_monthly_sales(request):
         )
 
 
-# def search_combos(request){
-#     if request.method == "GET":
-#         # group items names with orders
+@csrf_exempt
+def search_combos(request):
+    orders = pd.read_csv("../data/restaurant-1-orders.csv")
+    if request.method == "POST":
+        json_data = json.loads(request.body)
+        search_key = json_data["key"]
+        grouped = orders.groupby(["Order Number"])["Item Name"]
+        combos = grouped.apply(lambda x: x.unique())
+        combos = combos[combos.apply(lambda x: len(x) > 1)]
+        combos = combos.apply(lambda x: ", ".join(x))
+        combos = combos.value_counts()
+        combos = combos[combos > 1]
+        combos = combos.to_dict()
+        keyz = list(combos.keys())
 
-#         # count repeated items with that order
-# }
+        search_list = []
+
+        for key in keyz:
+            if search_key.lower() in key.lower():
+                search_list.append(key)
+
+        return JsonResponse({"combos": keyz[0], "search_list": search_list[0]})
 
 
 @csrf_exempt
