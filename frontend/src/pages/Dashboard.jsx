@@ -66,14 +66,16 @@ function Dashboard(props) {
           {hasUploaded ? (
             <>
               <div className="statbar">
-                <div className="statbar item">Next holiday: Christmas Day</div>
                 <div className="statbar item">
-                  <label>Averages:</label>
-                  <label>Orders: {averageOrderQuantity}</label>
-                  <label>Sales: ${averageOrderValue}</label>
+                  Expected number of orders per day
                 </div>
                 <div className="statbar item">
-                  Worst performing item: Masala
+                  <label>Average Order:</label>
+                  <label>Quantity: {averageOrderQuantity}</label>
+                  <label>Sales: £{averageOrderValue}</label>
+                </div>
+                <div className="statbar item">
+                  We expect 10% increase in orders for Monday
                 </div>
               </div>
               <div className="section header"></div>
