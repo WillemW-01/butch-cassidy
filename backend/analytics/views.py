@@ -64,7 +64,7 @@ def get_daily_quantities(request):
         keys = list(p_quants.index.strftime("%Y-%m-%d")) + list(
             f_quants.index.strftime("%Y-%m-%d")
         )
-        values = list(round(p_quants.quantity, 1)) + list(round(f_quants.quantity, 1))
+        values = list(p_quants.quantity) + list(round(f_quants.quantity, 1))
 
         return JsonResponse(
             {"time": keys, "quantities": values, "predict_start": f_quants.index[0].strftime("%Y-%m-%d")}
@@ -95,11 +95,11 @@ def get_weekly_quantities(request):
         f["quantity"] = f["quantity"].astype(int)
         f = f.groupby(["week"])["quantity"].sum()
 
+        pvals = [int(x) for x in p.values]
+        fvals = [float(round(x, 1)) for x in f.values]
 
-        keys = list(p.week.strftime("%Y-%m-%d")) + list(
-            f.week.strftime("%Y-%m-%d")
-        )
-        values = list(round(p.quantity, 1)) + list(round(f.quantity, 1))
+        keys = list(p.index) + list(f.index)
+        values = list(pvals) + list(fvals)
 
         return JsonResponse(
             {"time": keys, "quantities": values, "predict_start": f_quants.index[0].strftime("%Y-%m-%d")}
