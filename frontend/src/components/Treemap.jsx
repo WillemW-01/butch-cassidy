@@ -95,6 +95,11 @@ function Treemap(props) {
     },
   ];
   const options = {
+    chart: {
+      toolbar: {
+        show: false,
+      },
+    },
     plotOptions: {
       treemap: {
         distributed: true,

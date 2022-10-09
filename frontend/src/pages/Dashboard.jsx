@@ -4,20 +4,20 @@ import GraphOrders from "../components/GraphOrders";
 import Treemap from "../components/Treemap";
 import Spinner from "../components/Spinner";
 import icon from "./add-panel.svg";
-import bulb from "./lightbulb.svg";
+import bulb from "./bulb.svg";
 import "./dashboard.css";
 import GraphSales from "../components/GraphSales";
 import WeekdayGraph from "../components/WeekdayGraph";
 
 function Dashboard(props) {
   const [showSpinner, setShowSpinner] = useState(false);
+  const [averageOrderQuantity, setAverageOrderQuantity] = useState(0);
+  const [averageOrderValue, setAverageOrderValue] = useState(0);
   const [hasUploaded, setHasUploaded] = useState(false);
 
   const getData = () => {
     console.log("Got data");
-
     setShowSpinner(true);
-
     sleep(1000).then(() => {
       setShowSpinner(false);
       setHasUploaded(true);
@@ -25,8 +25,22 @@ function Dashboard(props) {
     });
   };
 
+  const getAverage = () => {
+    setShowSpinner(false);
+    fetch("http://127.0.0.1:8000/analytics/average_order").then(
+      async (response) => {
+        const data = await response.json();
+        console.log(data);
+        setAverageOrderQuantity(data.average);
+        setAverageOrderValue(data.sales);
+        setShowSpinner(true);
+      }
+    );
+  };
+
   useEffect(() => {
     console.log(`Has uploaded: ${hasUploaded}`);
+    getAverage();
   }, [hasUploaded]);
 
   const sleep = (milliseconds) => {
@@ -53,7 +67,11 @@ function Dashboard(props) {
             <>
               <div className="statbar">
                 <div className="statbar item">Next holiday: Christmas Day</div>
-                <div className="statbar item">Most orders this week: 6</div>
+                <div className="statbar item">
+                  <label>Averages:</label>
+                  <label>Orders: {averageOrderQuantity}</label>
+                  <label>Sales: ${averageOrderValue}</label>
+                </div>
                 <div className="statbar item">
                   Worst performing item: Masala
                 </div>
@@ -76,7 +94,7 @@ function Dashboard(props) {
                   <Treemap title="Item Distribution" />
                 </div>
                 <div className="insight item">
-                  <WeekdayGraph title="Week Days" />
+                  <WeekdayGraph title="Weekday" />
                 </div>
               </div>
             </>
