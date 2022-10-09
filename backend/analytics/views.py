@@ -19,6 +19,9 @@ from sklearn.metrics import mean_absolute_error
 # products_price1 = pd.read_csv("../data/restaurant-1-products-price.csv")
 # products_price2 = pd.read_csv("../data/restaurant-2-products-price.csv")
 
+p_quants = pd.DataFrame()
+f_quants = pd.DataFrame()
+end_data = ""
 
 def sign_up(request):
     if request.method == "GET":
@@ -28,6 +31,18 @@ def sign_up(request):
 
 def get_daily_quantities(request):
     if request.method == "GET":
+
+        keys = list(p_quants.index.strftime('%Y-%m-%d')) + list(f_quants.index.strftime('%Y-%m-%d'))
+        values = list(round(p_quants.quantity, 1)) + list(round(f_quants.quantity, 1))
+
+        return JsonResponse({"time": keys, "quantities": values, "past_data_end":end_date})
+
+
+def get_weekly_quantities(request):
+    orders1 = pd.read_csv("../data/restaurant-1-orders.csv")
+    if request.method == "GET":
+        global p_quants, f_quants, end_date
+
         orders = pd.read_csv('../data/restaurant-1-orders.csv')
 
         orders['Order Date'] = pd.to_datetime(orders['Order Date']).dt.strftime('%Y-%m-%d')
@@ -53,15 +68,9 @@ def get_daily_quantities(request):
 
         f_quants = predict(p_quants)
 
-        keys = list(p_quants.index.strftime('%Y-%m-%d')) + list(f_quants.index.strftime('%Y-%m-%d'))
-        values = list(round(p_quants.quantity, 1)) + list(round(f_quants.quantity, 1))
-
-        return JsonResponse({"time": keys, "quantities": values, "past_data_end":end_date})
 
 
-def get_weekly_quantities(request):
-    orders1 = pd.read_csv("../data/restaurant-1-orders.csv")
-    if request.method == "GET":
+
         o = orders1.copy(deep=True)
         o["Order Date"] = pd.to_datetime(o["Order Date"])
         o["Weekly"] = o["Order Date"].apply(
@@ -71,7 +80,7 @@ def get_weekly_quantities(request):
         o["Quantity"] = o["Quantity"].astype(int)
         o = o.groupby(["Weekly"])["Quantity"].sum().to_dict()
 
-        keys = str(list(o.keys()))
+        keys = list(o.keys())
         values = list(o.values())
 
         (keys, values) = zip(*o.items())
