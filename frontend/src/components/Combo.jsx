@@ -33,47 +33,35 @@ function Combo() {
     e.preventDefault();
     setShouldShow(false);
     setSearchKey("");
-    let combos = [
-      "Chicken Masala",
-      "Biryani",
-      "Plain naan",
-      "Item1",
-      "Item2",
-      "Item3",
-    ];
 
-    sleep(1000).then(() => {
-      setResults(combos);
+    if (
+      searchKey !== "" &&
+      filteredData.length > 0 &&
+      !filteredData.includes("No items")
+    ) {
+      const request = JSON.stringify({ key: searchKey });
+      const response = await fetch(
+        "http://127.0.0.1:8000/analytics/search_combos",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: request,
+        }
+      );
+      const data = await response.json();
+      console.log(data);
+      setResults(data.search_list.split(","));
       setShouldShow(true);
-    });
-
-    // e.preventDefault();
-
-    // if (
-    //   searchKey !== "" &&
-    //   filteredData.length > 0 &&
-    //   !filteredData.includes("No items")
-    // ) {
-    //   const request = JSON.stringify({ key: searchKey });
-    //   const response = await fetch("http://127.0.0.1:8000/analytics/combos", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: request,
-    //   });
-    //   const data = await response.json();
-    //   console.log(data);
-    //   setResults(data.combos);
-    //   setShouldShow(true);
-    // } else {
-    //   console.log("Cant make search");
-    // }
+    } else {
+      console.log("Cant make search");
+    }
   };
 
-  const sleep = (milliseconds) => {
-    return new Promise((resolve) => setTimeout(resolve, milliseconds));
-  };
+  // const sleep = (milliseconds) => {
+  //   return new Promise((resolve) => setTimeout(resolve, milliseconds));
+  // };
 
   const getFilteredData = (text) => {
     let tempData = itemList.filter((item) => {
