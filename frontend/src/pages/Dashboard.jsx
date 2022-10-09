@@ -13,7 +13,7 @@ function Dashboard(props) {
   const [showSpinner, setShowSpinner] = useState(false);
   const [averageOrderQuantity, setAverageOrderQuantity] = useState(0);
   const [averageOrderValue, setAverageOrderValue] = useState(0);
-  const [hasUploaded, setHasUploaded] = useState(false);
+  const [hasUploaded, setHasUploaded] = useState(true);
 
   const getData = () => {
     console.log("Got data");
@@ -67,15 +67,28 @@ function Dashboard(props) {
             <>
               <div className="statbar">
                 <div className="statbar item">
-                  Expected number of orders per day
+                  <div className="statbar item top">10.4</div>
+                  <div className="statbar item bottom">
+                    expected orders for today
+                  </div>
                 </div>
                 <div className="statbar item">
-                  <label>Average Order:</label>
-                  <label>Quantity: {averageOrderQuantity}</label>
-                  <label>Sales: £{averageOrderValue}</label>
+                  <div className="statbar item top">
+                    £{averageOrderValue} | {averageOrderQuantity} items
+                  </div>
+                  <div className="statbar item bottom">for average orders</div>
                 </div>
                 <div className="statbar item">
-                  We expect 10% increase in orders for Monday
+                  <div className="statbar item top">10% increase</div>
+                  <div className="statbar item bottom">
+                    expected orders for Monday
+                  </div>
+                </div>
+                <div className="statbar item">
+                  <div className="statbar item top">10% increase</div>
+                  <div className="statbar item bottom">
+                    expected orders for Monday
+                  </div>
                 </div>
               </div>
               <div className="section header"></div>
