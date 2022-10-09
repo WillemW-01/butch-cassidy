@@ -14,41 +14,20 @@ import lightgbm as lgb
 from lightgbm import LGBMRegressor
 from sklearn.metrics import mean_absolute_error
 
-# orders1 = pd.read_csv("../data/restaurant-1-orders.csv")
-# orders2 = pd.read_csv("../data/restaurant-2-orders.csv")
-# products_price1 = pd.read_csv("../data/restaurant-1-products-price.csv")
-# products_price2 = pd.read_csv("../data/restaurant-2-products-price.csv")
-
+main_orders = pd.DataFrame()
+main_prices = pd.DataFrame()
 p_quants = pd.DataFrame()
 f_quants = pd.DataFrame()
-end_data = ""
 
-
+@csrf_exempt
 def sign_up(request):
-    if request.method == "GET":
+    if request.method == "POST":
+        global main_orders, main_prices, p_quants, f_quants
 
-        return
+        main_orders = pd.read_csv("../data/restaurant-1-orders.csv")
+        main_prices = pd.read_csv("../data/restaurant-1-products-price.csv")
 
-
-def get_daily_quantities(request):
-    if request.method == "GET":
-
-        keys = list(p_quants.index.strftime("%Y-%m-%d")) + list(
-            f_quants.index.strftime("%Y-%m-%d")
-        )
-        values = list(round(p_quants.quantity, 1)) + list(round(f_quants.quantity, 1))
-
-        return JsonResponse(
-            {"time": keys, "quantities": values, "past_data_end": end_date}
-        )
-
-
-def get_weekly_quantities(request):
-    orders1 = pd.read_csv("../data/restaurant-1-orders.csv")
-    if request.method == "GET":
-        global p_quants, f_quants, end_date
-
-        orders = pd.read_csv("../data/restaurant-1-orders.csv")
+        orders = main_orders.copy(deep=True)
 
         orders["Order Date"] = pd.to_datetime(orders["Order Date"]).dt.strftime(
             "%Y-%m-%d"
@@ -75,21 +54,56 @@ def get_weekly_quantities(request):
 
         f_quants = predict(p_quants)
 
-        o = orders1.copy(deep=True)
-        o["Order Date"] = pd.to_datetime(o["Order Date"])
-        o["Weekly"] = o["Order Date"].apply(
+        return JsonResponse({"success":True})
+
+
+def get_daily_quantities(request):
+    if request.method == "GET":
+        global p_quants, f_quants
+
+        keys = list(p_quants.index.strftime("%Y-%m-%d")) + list(
+            f_quants.index.strftime("%Y-%m-%d")
+        )
+        values = list(round(p_quants.quantity, 1)) + list(round(f_quants.quantity, 1))
+
+        return JsonResponse(
+            {"time": keys, "quantities": values, "predict_start": f_quants.index[0].strftime("%Y-%m-%d")}
+        )
+
+
+def get_weekly_quantities(request):
+    if request.method == "GET":
+        global p_quants, f_quants
+
+        p = p_quants.copy(deep=True)
+        f = f_quants.copy(deep=True)
+
+        p['date'] = p.index
+        p["week"] = p['date'].apply(
             lambda x: x - pd.Timedelta(days=x.weekday())
         )
-        o["Weekly"] = o["Weekly"].dt.strftime("%Y-%m-%d")
-        o["Quantity"] = o["Quantity"].astype(int)
-        o = o.groupby(["Weekly"])["Quantity"].sum().to_dict()
+        p["week"] = p["week"].dt.strftime("%Y-%m-%d")
+        p["quantity"] = p["quantity"].astype(int)
+        p = p.groupby(["week"])["quantity"].sum()
 
-        keys = list(o.keys())
-        values = list(o.values())
 
-        (keys, values) = zip(*o.items())
+        f['date'] = f.index
+        f["week"] = f['date'].apply(
+            lambda x: x - pd.Timedelta(days=x.weekday())
+        )
+        f["week"] = f["week"].dt.strftime("%Y-%m-%d")
+        f["quantity"] = f["quantity"].astype(int)
+        f = f.groupby(["week"])["quantity"].sum()
 
-        return JsonResponse({"time": keys, "quantities": values})
+
+        keys = list(p.week.strftime("%Y-%m-%d")) + list(
+            f.week.strftime("%Y-%m-%d")
+        )
+        values = list(round(p.quantity, 1)) + list(round(f.quantity, 1))
+
+        return JsonResponse(
+            {"time": keys, "quantities": values, "predict_start": f_quants.index[0].strftime("%Y-%m-%d")}
+        )
 
 
 def get_monthly_quantities(request):
