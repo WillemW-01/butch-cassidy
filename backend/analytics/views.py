@@ -27,17 +27,19 @@ def sign_up(request):
         global main_orders, main_prices, p_quants, f_quants, p_sales, f_sales, p_orders, f_orders
     
         json_data = json.loads(request.body)
-        name = json_data["restaurant"]
+        name = json_data["restaurant"].lower()
 
-        # if name.lower() == "blue billie jeans":
-        #     main_orders = pd.read_csv("../data/restaurant-1-orders.csv")
-        #     main_prices = pd.read_csv("../data/restaurant-1-products-price.csv")
-        # elif name.lower() == "red butter bus":
-        #     main_orders = pd.read_csv("../data/restaurant-2-orders.csv")
-        #     main_prices = pd.read_csv("../data/restaurant-2-products-price.csv")
+        if name == "blue billie jeans":
+            main_orders = pd.read_csv("../data/restaurant-1-orders.csv")
+            main_prices = pd.read_csv("../data/restaurant-1-products-price.csv")
+        elif name == "red butter bus":
+            main_orders = pd.read_csv("../data/restaurant-2-orders.csv")
+            main_prices = pd.read_csv("../data/restaurant-2-products-price.csv")
+        else:
+            main_orders = pd.read_csv("../data/restaurant-1-orders.csv")
+            main_prices = pd.read_csv("../data/restaurant-1-products-price.csv")
+            
 
-        main_orders = pd.read_csv("../data/restaurant-1-orders.csv")
-        main_prices = pd.read_csv("../data/restaurant-1-products-price.csv")
 
         #################
         # Quantities

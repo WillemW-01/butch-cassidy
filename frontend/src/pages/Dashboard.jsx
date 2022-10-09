@@ -62,7 +62,7 @@ function Dashboard() {
         const data = await response.json();
         console.log(data);
 
-        setBestItem(data.prediction);
+        setBestItem(data.tuesday);
         setStatSpinner2(true);
       }
     );
@@ -88,7 +88,7 @@ function Dashboard() {
         const data = await response.json();
         console.log(data);
 
-        setOrdersDifference(data.prediction);
+        setOrdersDifference(data.change);
         setStatSpinner4(true);
       }
     );

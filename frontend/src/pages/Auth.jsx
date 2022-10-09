@@ -89,6 +89,7 @@ function Auth() {
               type="text"
               value={restaurant}
               onChange={(e) => setRestaurant(e.target.value)}
+              placeholder="e.g. Blue Billie Jeans"
             />
           </fieldset>
           <fieldset>

@@ -8,11 +8,11 @@ import Spinner from "./Spinner";
 function Combo() {
   const [itemList, setItemList] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
-  const [shouldShow, setShouldShow] = useState(true);
+  const [shouldShow, setShouldShow] = useState(false);
   const [searchKey, setSearchKey] = useState("");
   const [results, setResults] = useState([]);
 
-  const getData = () => {
+  const getData = async () => {
     fetch("http://127.0.0.1:8000/analytics/top_items").then(
       async (response) => {
         const data = await response.json();
@@ -20,6 +20,22 @@ function Combo() {
         setItemList(data.items);
       }
     );
+
+    const request = JSON.stringify({ key: "Chicken" });
+    const response = await fetch(
+      "http://127.0.0.1:8000/analytics/search_combos",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: request,
+      }
+    );
+    const data = await response.json();
+    console.log(data);
+    setResults(data.combos.split(","));
+    setShouldShow(true);
   };
 
   useEffect(() => {
@@ -31,14 +47,13 @@ function Combo() {
 
   const getCombos = async (e) => {
     e.preventDefault();
-    setShouldShow(false);
-    setSearchKey("");
-
     if (
       searchKey !== "" &&
       filteredData.length > 0 &&
       !filteredData.includes("No items")
     ) {
+      setSearchKey("");
+      setShouldShow(false);
       const request = JSON.stringify({ key: searchKey });
       const response = await fetch(
         "http://127.0.0.1:8000/analytics/search_combos",
