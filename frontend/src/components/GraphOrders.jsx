@@ -43,24 +43,6 @@ function GraphOrders(props) {
       },
     },
 
-    annotations: {
-      xaxis: [
-        {
-          x: new Date(date[date.length - 13]).getTime(),
-          borderColor: "#999",
-          yAxisIndex: 0,
-          label: {
-            show: true,
-            text: "Forecast Start",
-            style: {
-              color: "#fff",
-              background: "#775DD0",
-            },
-          },
-        },
-      ],
-    },
-
     tooltip: {
       x: {
         format: "dd MMM yyyy",
@@ -71,7 +53,7 @@ function GraphOrders(props) {
       show: true,
       curve: "smooth",
       lineCap: "butt",
-      colors: ["#3D0082"],
+      colors: ["#7528b2"],
       width: 0.5,
       dashArray: 0,
     },
@@ -100,12 +82,29 @@ function GraphOrders(props) {
         stops: [0, 100, 75, 75],
       },
     },
-    forecastDataPoints: {
-      count: 12,
-      fillOpacity: 0.5,
-      strokeWidth: undefined,
-      dashArray: 6,
-    },
+    // annotations: {
+    //   xaxis: [
+    //     {
+    //       x: new Date(date[date.length - 13]).getTime(),
+    //       borderColor: "#999",
+    //       yAxisIndex: 0,
+    //       label: {
+    //         show: true,
+    //         text: "Forecast Start",
+    //         style: {
+    //           color: "#fff",
+    //           background: "#775DD0",
+    //         },
+    //       },
+    //     },
+    //   ],
+    // },
+    // forecastDataPoints: {
+    //   count: 12,
+    //   fillOpacity: 0.5,
+    //   strokeWidth: 2,
+    //   dashArray: 2,
+    // },
   };
 
   return (
