@@ -45,6 +45,9 @@ function GraphOrders(props) {
         fontFamily: "Helvetica, Arial, sans-serif",
       },
     },
+    markers: {
+      colors: ["#7528b2"],
+    },
     tooltip: {
       x: {
         format: "dd MMM yyyy",
