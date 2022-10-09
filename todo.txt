@@ -1,7 +1,17 @@
 Backend:
 
+--- Quantities sold gives a 500 error
+--- function for predicted orders and sales
+--- combos function and endpoint (".../analytics/combos")
+
 Frontend:
---- add spinners for stat items
---- format stat items
---- add spinners to other graphs
---- add "predicted orders and sales to statitem"
+--- add spinners for stat items                   --> done
+--- format stat items                             --> done
+--- add spinners to other graphs                  --> done
+--- add "predicted orders and sales to statitem"  --> done (frontend)
+
+--- distinguish forecasted data from historical
+
+--- make slides
+--- finish slides
+

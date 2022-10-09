@@ -12,9 +12,17 @@ import Combo from "../components/Combo";
 
 function Dashboard(props) {
   const [showSpinner, setShowSpinner] = useState(false);
-  const [averageOrderQuantity, setAverageOrderQuantity] = useState(0);
-  const [averageOrderValue, setAverageOrderValue] = useState(0);
+  // const [averageOrderQuantity, setAverageOrderQuantity] = useState(0);
+  // const [averageOrderValue, setAverageOrderValue] = useState(0);
+  const [averageOrder, setAverageOrder] = useState({});
   const [hasUploaded, setHasUploaded] = useState(true);
+
+  const [statSpinners, setStatSpinners] = useState([
+    false,
+    false,
+    false,
+    false,
+  ]);
 
   const getData = () => {
     console.log("Got data");
@@ -32,11 +40,22 @@ function Dashboard(props) {
       async (response) => {
         const data = await response.json();
         console.log(data);
-        setAverageOrderQuantity(data.average.toFixed(1));
-        setAverageOrderValue(data.sales);
-        setShowSpinner(true);
+
+        setAverageOrder({
+          quantity: data.average.toFixed(1),
+          value: data.sales,
+        });
+        updateStatSpinners(0, true);
       }
     );
+  };
+
+  const updateStatSpinners = (index, value) => {
+    let tempArray = [...statSpinners];
+    tempArray[index] = value;
+    console.log("Temp array");
+    console.log(tempArray);
+    setStatSpinners(tempArray);
   };
 
   useEffect(() => {
@@ -68,28 +87,54 @@ function Dashboard(props) {
             <>
               <div className="statbar">
                 <div className="statbar item">
-                  <div className="statbar item top">
-                    £{averageOrderValue} | {averageOrderQuantity} items
-                  </div>
-                  <div className="statbar item bottom">
-                    For an average order
-                  </div>
+                  {statSpinners[0] ? (
+                    <>
+                      <div className="statbar item top">
+                        £{averageOrder.value} | {averageOrder.quantity} items
+                      </div>
+                      <div className="statbar item bottom">
+                        For an average order
+                      </div>
+                    </>
+                  ) : (
+                    <Spinner type="balls" />
+                  )}
                 </div>
                 <div className="statbar item">
-                  <div className="statbar item top">Plain naan</div>
-                  <div className="statbar item bottom">Best item yesterday</div>
+                  {statSpinners[1] ? (
+                    <>
+                      <div className="statbar item top">Plain naan</div>
+                      <div className="statbar item bottom">
+                        Best item yesterday
+                      </div>
+                    </>
+                  ) : (
+                    <Spinner type="balls" />
+                  )}
                 </div>
                 <div className="statbar item">
-                  <div className="statbar item top">10.4</div>
-                  <div className="statbar item bottom">
-                    Expected orders for today
-                  </div>
+                  {statSpinners[2] ? (
+                    <>
+                      <div className="statbar item top">10.4</div>
+                      <div className="statbar item bottom">
+                        Expected orders for today
+                      </div>
+                    </>
+                  ) : (
+                    <Spinner type="balls" />
+                  )}
                 </div>
                 <div className="statbar item">
-                  <div className="statbar item top">10% increase</div>
-                  <div className="statbar item bottom">
-                    Expected orders for tomorrow
-                  </div>
+                  {statSpinners[3] ? (
+                    <>
+                      <div className="statbar item top">10% increase</div>
+                      <div className="statbar item bottom">
+                        Expected orders for tomorrow
+                      </div>
+                    </>
+                  ) : (
+                    <Spinner type="balls" />
+                  )}
                 </div>
               </div>
               <div className="section header"></div>
@@ -112,7 +157,7 @@ function Dashboard(props) {
                   <Treemap title="Item Distribution" />
                 </div>
                 <div className="insight item">
-                  <WeekdayGraph title="Weekday" />
+                  <WeekdayGraph title="Order quantities per weekday" />
                 </div>
               </div>
             </>

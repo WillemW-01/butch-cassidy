@@ -7,12 +7,12 @@
 .comboResults tr {
   text-align: center;
   width: 100%;
-  background: #372c75ed;
+  background: #372c75c7;
   padding: 10px;
   color: white;
 }
 
 
 .comboResults tr:nth-of-type(2n) {
-  background: #60578eed;
+  background: #60578ece;
 }
