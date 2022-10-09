@@ -1,0 +1,18 @@
+.comboResults {
+  padding: 0px;
+  height: 225px;
+  width: 55%;
+}
+
+.comboResults tr {
+  text-align: center;
+  width: 100%;
+  background: #372c75ed;
+  padding: 10px;
+  color: white;
+}
+
+
+.comboResults tr:nth-of-type(2n) {
+  background: #60578eed;
+}

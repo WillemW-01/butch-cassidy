@@ -115,14 +115,13 @@
 
 /* statbar */
 .body .statbar {
-  margin: none;
-  width: 100%;
+  width: 90%;
   display: flex;
-  justify-content: space-around;
-  gap: 30px;
+  gap: 100px;
 }
 
 .statbar.item {
+  flex: 1;
   background: white;
   padding: 30px;
   border-radius: 15px;

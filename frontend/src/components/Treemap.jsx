@@ -78,11 +78,9 @@ function Treemap(props) {
   }, []);
 
   const getFilteredData = (text) => {
-    console.log(itemList);
     let tempData = itemList.filter((item) => {
       return text === "" ? "" : item.toLowerCase().includes(text);
     });
-    console.log(tempData);
     tempData = tempData.splice(0, 5);
     if (tempData.length === 0) tempData = ["No items"];
     setFilteredData(tempData);
@@ -136,6 +134,7 @@ function Treemap(props) {
               id="searchInput"
               placeholder="check for an item type"
               onChange={(e) => getFilteredData(e.target.value)}
+              autoComplete="off"
             />
 
             {searchKey !== "" && (
@@ -153,7 +152,7 @@ function Treemap(props) {
             series={series}
             type="treemap"
             width={500}
-            height={250}
+            height={225}
           />
         </>
       )}
