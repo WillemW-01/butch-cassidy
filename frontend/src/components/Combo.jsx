@@ -3,21 +3,15 @@ import { useEffect } from "react";
 import { useState } from "react";
 
 import "./combo.css";
+import Spinner from "./Spinner";
 
 function Combo() {
   const [graphData, setGraphData] = useState([]);
   const [itemList, setItemList] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
-  const [shouldShow, setShouldShow] = useState(false);
+  const [shouldShow, setShouldShow] = useState(true);
   const [searchKey, setSearchKey] = useState("");
-  const [results, setResults] = useState([
-    "Chicken Masala",
-    "Biryani",
-    "Plain naan",
-    "Item1",
-    "Item2",
-    "Item3",
-  ]);
+  const [results, setResults] = useState([]);
 
   const getData = () => {
     fetch("http://127.0.0.1:8000/analytics/top_items").then(
@@ -36,6 +30,9 @@ function Combo() {
   }, []);
 
   const getCombos = async (e) => {
+    e.preventDefault();
+    setShouldShow(false);
+    setSearchKey("");
     let combos = [
       "Chicken Masala",
       "Biryani",
@@ -45,9 +42,13 @@ function Combo() {
       "Item3",
     ];
 
-    setResults(combos);
+    sleep(1000).then(() => {
+      setResults(combos);
+      setShouldShow(true);
+    });
 
     // e.preventDefault();
+
     // if (
     //   searchKey !== "" &&
     //   filteredData.length > 0 &&
@@ -64,9 +65,14 @@ function Combo() {
     //   const data = await response.json();
     //   console.log(data);
     //   setResults(data.combos);
+    //   setShouldShow(true);
     // } else {
     //   console.log("Cant make search");
     // }
+  };
+
+  const sleep = (milliseconds) => {
+    return new Promise((resolve) => setTimeout(resolve, milliseconds));
   };
 
   const getFilteredData = (text) => {
@@ -102,16 +108,20 @@ function Combo() {
         <button type="submit">Search</button>
       </form>
 
-      <table className="comboResults">
-        <th>Commonly bought together:</th>
-        {results.map((item, index) => {
-          return (
-            <tr key={index}>
-              <td>{item}</td>
-            </tr>
-          );
-        })}
-      </table>
+      {shouldShow ? (
+        <table className="comboResults">
+          <th>Commonly bought together:</th>
+          {results.map((item, index) => {
+            return (
+              <tr key={index}>
+                <td>{item}</td>
+              </tr>
+            );
+          })}
+        </table>
+      ) : (
+        <Spinner type="balls" />
+      )}
     </div>
   );
 }

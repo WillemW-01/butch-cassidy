@@ -35,6 +35,7 @@ function Treemap(props) {
   };
 
   const getData = () => {
+    setShouldShow(false);
     fetch("http://127.0.0.1:8000/analytics/top_items").then(
       async (response) => {
         const data = await response.json();
@@ -46,6 +47,7 @@ function Treemap(props) {
   };
 
   const getGrouped = async (e) => {
+    setShouldShow(false);
     e.preventDefault();
     if (
       searchKey !== "" &&
