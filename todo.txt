@@ -1,0 +1,7 @@
+Backend:
+
+Frontend:
+--- add spinners for stat items
+--- format stat items
+--- add spinners to other graphs
+--- add "predicted orders and sales to statitem"
