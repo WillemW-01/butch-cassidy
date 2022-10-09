@@ -16,13 +16,15 @@ p_quants = pd.DataFrame()
 f_quants = pd.DataFrame()
 p_sales = pd.DataFrame()
 f_sales = pd.DataFrame()
+p_orders = pd.DataFrame()
+f_orders = pd.DataFrame()
 
 
 @csrf_exempt
 def sign_up(request):
     if request.method == "POST":
-        global main_orders, main_prices, p_quants, f_quants, p_sales, f_sales
-
+        global main_orders, main_prices, p_quants, f_quants, p_sales, f_sales, p_orders, f_orders
+    
         json_data = json.loads(request.body)
         name = json_data["restaurant"]
 
@@ -100,7 +102,40 @@ def sign_up(request):
 
         f_sales = predict(p_sales)
 
-        return JsonResponse({"success": True})
+        #################
+        # Orders
+        #################
+
+        orders = main_orders.copy(deep=True)
+
+        orders["Order Date"] = pd.to_datetime(orders["Order Date"]).dt.strftime(
+            "%Y-%m-%d"
+        )
+        orders = orders.sort_values(by="Order Date", ascending=True)
+
+        start_date = orders["Order Date"].iloc[0]
+        end_date = orders["Order Date"].iloc[-1]
+ 
+        orders = orders[['Order Number', 'Order Date']].drop_duplicates(subset=['Order Number'], keep='first')
+        orders = orders['Order Date']
+        grouped = orders.value_counts().sort_index()
+
+        date_range = pd.date_range(start_date, end_date, freq="D")
+        column = []
+        for date in date_range:
+            d = date.strftime("%Y-%m-%d")
+            if d in grouped.index:
+                column.append(grouped[d])
+            else:
+                column.append(0)
+        dic = {"date": date_range, "quantity": column}
+        p_orders = pd.DataFrame(dic)
+        p_orders = p_orders.set_index(p_orders.date)
+        p_orders.drop("date", axis=1, inplace=True)
+
+        f_orders = predict(p_orders)
+
+        return JsonResponse({"success":True})
 
 
 def get_daily_quantities(request):
@@ -356,6 +391,18 @@ def average_order(request):
         average_quantity = round((grouped_quantity.mean()), 2)
         average_sales = round((grouped_sales.mean()), 2)
         return JsonResponse({"average": average_quantity, "sales": average_sales})
+
+
+def expected_orders_today(request):
+     if request.method == "GET":
+        global f_orders
+
+        f = f_orders.copy(deep=True)
+
+        f.index = f.index.strftime("%m-%d")
+        now = datetime.now().strftime('%m-%d')
+
+        return JsonResponse({'prediction':float(round(f.loc[now], 1))})
 
 
 def predict(Y_train):
