@@ -1,33 +1,40 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+
 import GraphOrders from "../components/GraphOrders";
 import Treemap from "../components/Treemap";
 import Spinner from "../components/Spinner";
-import icon from "./add-panel.svg";
-import bulb from "./bulb.svg";
-import "./dashboard.css";
 import GraphSales from "../components/GraphSales";
 import WeekdayGraph from "../components/WeekdayGraph";
 import Combo from "../components/Combo";
 
-function Dashboard(props) {
+import icon from "./add-panel.svg";
+import bulb from "./bulb.svg";
+import "./dashboard.css";
+
+function Dashboard() {
+  const [hasUploaded, setHasUploaded] = useState(false);
   const [showSpinner, setShowSpinner] = useState(false);
   const [averageOrder, setAverageOrder] = useState({});
-  const [hasUploaded, setHasUploaded] = useState(false);
+  const [bestItem, setBestItem] = useState(0);
+  const [expectedToday, setExpectedToday] = useState(0);
+  const [ordersDifference, setOrdersDifference] = useState(0);
 
-  const [statSpinners, setStatSpinners] = useState([
-    false,
-    false,
-    false,
-    false,
-  ]);
+  const [statSpinner1, setStatSpinner1] = useState(false);
+  const [statSpinner2, setStatSpinner2] = useState(false);
+  const [statSpinner3, setStatSpinner3] = useState(false);
+  const [statSpinner4, setStatSpinner4] = useState(false);
 
   const getData = () => {
     console.log("Got data");
     setShowSpinner(true);
-    sleep(1000).then(() => {
+    sleep(1500).then(() => {
       setShowSpinner(false);
       setHasUploaded(true);
+      getAverage();
+      getBestItem();
+      getExpectedToday();
+      getOrdersDifference();
       console.log("Set show to true");
     });
   };
@@ -43,23 +50,49 @@ function Dashboard(props) {
           quantity: data.average.toFixed(1),
           value: data.sales,
         });
-        updateStatSpinners(0, true);
+        setStatSpinner1(true);
       }
     );
   };
 
-  const updateStatSpinners = (index, value) => {
-    let tempArray = [...statSpinners];
-    tempArray[index] = value;
-    console.log("Temp array");
-    console.log(tempArray);
-    setStatSpinners(tempArray);
+  const getBestItem = () => {
+    setShowSpinner(false);
+    fetch("http://127.0.0.1:8000/analytics/best_item").then(
+      async (response) => {
+        const data = await response.json();
+        console.log(data);
+
+        setBestItem(data.prediction);
+        setStatSpinner2(true);
+      }
+    );
   };
 
-  useEffect(() => {
-    console.log(`Has uploaded: ${hasUploaded}`);
-    getAverage();
-  }, [hasUploaded]);
+  const getExpectedToday = () => {
+    setShowSpinner(false);
+    fetch("http://127.0.0.1:8000/analytics/expected_orders_today").then(
+      async (response) => {
+        const data = await response.json();
+        console.log(data);
+
+        setExpectedToday(data.prediction);
+        setStatSpinner3(true);
+      }
+    );
+  };
+
+  const getOrdersDifference = () => {
+    setShowSpinner(false);
+    fetch("http://127.0.0.1:8000/analytics/expected_orders_change").then(
+      async (response) => {
+        const data = await response.json();
+        console.log(data);
+
+        setOrdersDifference(data.prediction);
+        setStatSpinner4(true);
+      }
+    );
+  };
 
   const sleep = (milliseconds) => {
     return new Promise((resolve) => setTimeout(resolve, milliseconds));
@@ -85,7 +118,7 @@ function Dashboard(props) {
             <>
               <div className="statbar">
                 <div className="statbar item">
-                  {statSpinners[0] ? (
+                  {statSpinner1 ? (
                     <>
                       <div className="statbar item top">
                         £{averageOrder.value} | {averageOrder.quantity} items
@@ -99,9 +132,9 @@ function Dashboard(props) {
                   )}
                 </div>
                 <div className="statbar item">
-                  {statSpinners[1] ? (
+                  {statSpinner2 ? (
                     <>
-                      <div className="statbar item top">Plain naan</div>
+                      <div className="statbar item top">{bestItem}</div>
                       <div className="statbar item bottom">
                         Best item yesterday
                       </div>
@@ -111,9 +144,9 @@ function Dashboard(props) {
                   )}
                 </div>
                 <div className="statbar item">
-                  {statSpinners[2] ? (
+                  {statSpinner3 ? (
                     <>
-                      <div className="statbar item top">10.4</div>
+                      <div className="statbar item top">{expectedToday}</div>
                       <div className="statbar item bottom">
                         Expected orders for today
                       </div>
@@ -123,11 +156,14 @@ function Dashboard(props) {
                   )}
                 </div>
                 <div className="statbar item">
-                  {statSpinners[3] ? (
+                  {statSpinner4 ? (
                     <>
-                      <div className="statbar item top">10% increase</div>
+                      <div className="statbar item top">
+                        {ordersDifference}%
+                        {ordersDifference > 0 ? " increase" : " decrease"}
+                      </div>
                       <div className="statbar item bottom">
-                        Expected orders for tomorrow
+                        Expected sales for tomorrow
                       </div>
                     </>
                   ) : (
@@ -155,7 +191,10 @@ function Dashboard(props) {
                   <Treemap title="Item Distribution" />
                 </div>
                 <div className="insight item">
-                  <WeekdayGraph title="Order quantities per weekday" />
+                  <WeekdayGraph
+                    title="Order quantities per weekday"
+                    hasUploaded={hasUploaded}
+                  />
                 </div>
               </div>
             </>

@@ -26,7 +26,7 @@ def sign_up(request):
         global main_orders, main_prices, p_quants, f_quants, p_sales, f_sales, p_orders, f_orders
     
         json_data = json.loads(request.body)
-        name = json_data['restaurant']
+        name = json_data["restaurant"]
 
         # if name.lower() == "blue billie jeans":
         #     main_orders = pd.read_csv("../data/restaurant-1-orders.csv")
@@ -83,9 +83,9 @@ def sign_up(request):
         start_date = orders["Order Date"].iloc[0]
         end_date = orders["Order Date"].iloc[-1]
 
-        orders['sales'] = orders['Product Price'] * orders['Quantity']
+        orders["sales"] = orders["Product Price"] * orders["Quantity"]
 
-        grouped = orders.groupby(orders['Order Date'])['sales'].sum()
+        grouped = orders.groupby(orders["Order Date"])["sales"].sum()
 
         date_range = pd.date_range(start_date, end_date, freq="D")
         column = []
@@ -197,20 +197,14 @@ def get_monthly_quantities(request):
         p = p_quants.copy(deep=True)
         f = f_quants.copy(deep=True)
 
-
-        p['date'] = p.index
-        p["month"] = p['date'].apply(
-            lambda x: x - pd.Timedelta(days=x.day-1)
-        )
+        p["date"] = p.index
+        p["month"] = p["date"].apply(lambda x: x - pd.Timedelta(days=x.day - 1))
         p["month"] = p["month"].dt.strftime("%Y-%m")
         p["quantity"] = p["quantity"].astype(int)
         p = p.groupby(["month"])["quantity"].sum()
 
-
-        f['date'] = f.index
-        f["month"] = f['date'].apply(
-            lambda x: x - pd.Timedelta(days=x.day-1)
-        )
+        f["date"] = f.index
+        f["month"] = f["date"].apply(lambda x: x - pd.Timedelta(days=x.day - 1))
         f["month"] = f["month"].dt.strftime("%Y-%m")
         f["quantity"] = f["quantity"].astype(int)
         f = f.groupby(["month"])["quantity"].sum()
@@ -222,7 +216,11 @@ def get_monthly_quantities(request):
         values = list(pvals) + list(fvals)
 
         return JsonResponse(
-            {"time": keys, "quantities": values, "predict_start": f_quants.index[0].strftime("%Y-%m-%d")}
+            {
+                "time": keys,
+                "quantities": values,
+                "predict_start": f_quants.index[0].strftime("%Y-%m-%d"),
+            }
         )
 
 
@@ -237,7 +235,11 @@ def calculate_daily_sales(request):
         values = list(p_sales.quantity) + list(round(f_sales.quantity, 1))
 
         return JsonResponse(
-            {"time": keys, "sales": values, "predict_start": f_sales.index[0].strftime("%Y-%m-%d")}
+            {
+                "time": keys,
+                "sales": values,
+                "predict_start": f_quants.index[0].strftime("%Y-%m-%d"),
+            }
         )
 
 
@@ -248,19 +250,14 @@ def calculate_weekly_sales(request):
         p = p_sales.copy(deep=True)
         f = f_sales.copy(deep=True)
 
-        p['date'] = p.index
-        p["week"] = p['date'].apply(
-            lambda x: x - pd.Timedelta(days=x.weekday())
-        )
+        p["date"] = p.index
+        p["week"] = p["date"].apply(lambda x: x - pd.Timedelta(days=x.weekday()))
         p["week"] = p["week"].dt.strftime("%Y-%m-%d")
         p["quantity"] = p["quantity"].astype(int)
         p = p.groupby(["week"])["quantity"].sum()
 
-
-        f['date'] = f.index
-        f["week"] = f['date'].apply(
-            lambda x: x - pd.Timedelta(days=x.weekday())
-        )
+        f["date"] = f.index
+        f["week"] = f["date"].apply(lambda x: x - pd.Timedelta(days=x.weekday()))
         f["week"] = f["week"].dt.strftime("%Y-%m-%d")
         f["quantity"] = f["quantity"].astype(int)
         f = f.groupby(["week"])["quantity"].sum()
@@ -272,7 +269,11 @@ def calculate_weekly_sales(request):
         values = list(pvals) + list(fvals)
 
         return JsonResponse(
-            {"time": keys, "sales": values, "predict_start": f_sales.index[0].strftime("%Y-%m-%d")}
+            {
+                "time": keys,
+                "sales": values,
+                "predict_start": f_quants.index[0].strftime("%Y-%m-%d"),
+            }
         )
 
 
@@ -283,20 +284,14 @@ def calculate_monthly_sales(request):
         p = p_sales.copy(deep=True)
         f = f_sales.copy(deep=True)
 
-
-        p['date'] = p.index
-        p["month"] = p['date'].apply(
-            lambda x: x - pd.Timedelta(days=x.day-1)
-        )
+        p["date"] = p.index
+        p["month"] = p["date"].apply(lambda x: x - pd.Timedelta(days=x.day - 1))
         p["month"] = p["month"].dt.strftime("%Y-%m")
         p["quantity"] = p["quantity"].astype(int)
         p = p.groupby(["month"])["quantity"].sum()
 
-
-        f['date'] = f.index
-        f["month"] = f['date'].apply(
-            lambda x: x - pd.Timedelta(days=x.day-1)
-        )
+        f["date"] = f.index
+        f["month"] = f["date"].apply(lambda x: x - pd.Timedelta(days=x.day - 1))
         f["month"] = f["month"].dt.strftime("%Y-%m")
         f["quantity"] = f["quantity"].astype(int)
         f = f.groupby(["month"])["quantity"].sum()
@@ -308,8 +303,20 @@ def calculate_monthly_sales(request):
         values = list(pvals) + list(fvals)
 
         return JsonResponse(
-            {"time": keys, "sales": values, "predict_start": f_sales.index[0].strftime("%Y-%m-%d")}
+            {
+                "time": keys,
+                "sales": values,
+                "predict_start": f_quants.index[0].strftime("%Y-%m-%d"),
+            }
         )
+
+
+# def search_combos(request){
+#     if request.method == "GET":
+#         # group items names with orders
+
+#         # count repeated items with that order
+# }
 
 
 @csrf_exempt

@@ -8,25 +8,25 @@ function GraphSales(props) {
   const [date1, setDate1] = useState([]);
   const [sales, setSales] = useState([]);
   const [shouldShow, setShouldShow] = useState(false);
+  const [predict_start, setPredict_start] = useState("");
 
-  const submit = (pastValue, futureValue, interval) => {
+  const submit = (interval) => {
     setShouldShow(false);
-    console.log(
-      `Got past: ${pastValue} and future: ${futureValue} and interval: ${interval}`
-    );
+
     fetch(`http://127.0.0.1:8000/analytics/calculate_${interval}_sales`).then(
       async (response) => {
         const data = await response.json();
         console.log(data);
         setDate1(data.time);
         setSales(data.sales);
+        setPredict_start(data.predict_start);
         setShouldShow(true);
       }
     );
   };
 
   useEffect(() => {
-    submit(0, 0, "monthly");
+    submit("monthly");
   }, []);
 
   var series = [
@@ -60,10 +60,26 @@ function GraphSales(props) {
         },
       },
     },
+    tooltip: {
+      x: {
+        format: "dd MMM yyyy",
+      },
+    },
     stroke: {
       width: 3,
       curve: "straight",
       colors: ["#332C5C"],
+    },
+    annotations: {
+      xaxis: [
+        {
+          x: new Date(predict_start).getTime(),
+          x2: new Date(date1[date1.length - 1]).getTime(),
+          borderColor: "#1F9DFC",
+          yAxisIndex: 0,
+          fillColor: "#1a005c7d",
+        },
+      ],
     },
   };
 

@@ -4,17 +4,15 @@ import ReactApexChart from "react-apexcharts";
 import Spinner from "./Spinner";
 
 function WeekdayGraph(props) {
-  const [weekdays, setWeekdays] = useState([]);
   const [quantities, setQuantities] = useState([]);
   const [shouldShow, setShouldShow] = useState(false);
 
-  const getData = () => {
+  const getData = (props) => {
     setShouldShow(false);
     fetch("http://127.0.0.1:8000/analytics/weekday_popularity").then(
       async (response) => {
         const data = await response.json();
         console.log(data);
-        setWeekdays(data.weekdays);
         setQuantities(data.quantity);
         setShouldShow(true);
       }
@@ -22,7 +20,10 @@ function WeekdayGraph(props) {
   };
 
   useEffect(() => {
-    getData();
+    if (props.hasUploaded) {
+      getData();
+    }
+    // eslint-disable-next-line
   }, []);
 
   const series = [

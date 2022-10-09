@@ -3,18 +3,15 @@ import ReactApexChart from "react-apexcharts";
 import TimeOptions from "./TimeOptions";
 import Spinner from "./Spinner";
 import "../App.css";
-import { exec } from "apexcharts";
 
 function GraphOrders(props) {
   const [date, setDate] = useState([]);
   const [quantities, setQuantities] = useState([]);
   const [shouldShow, setShouldShow] = useState(false);
+  const [predict_start, setPredict_start] = useState("");
 
-  const submit = (pastValue, futureValue, interval) => {
+  const submit = (interval) => {
     setShouldShow(false);
-    console.log(
-      `Got past: ${pastValue} and future: ${futureValue} and interval: ${interval}`
-    );
 
     const url = `http://127.0.0.1:8000/analytics/get_${interval}_quantities`;
     fetch(url).then(async (response) => {
@@ -22,12 +19,13 @@ function GraphOrders(props) {
       console.log(data);
       setDate(data.time);
       setQuantities(data.quantities);
+      setPredict_start(data.predict_start);
       setShouldShow(true);
     });
   };
 
   useEffect(() => {
-    submit(0, 0, "weekly");
+    submit("weekly");
   }, []);
 
   const series = [
@@ -47,13 +45,11 @@ function GraphOrders(props) {
         fontFamily: "Helvetica, Arial, sans-serif",
       },
     },
-
     tooltip: {
       x: {
         format: "dd MMM yyyy",
       },
     },
-
     stroke: {
       show: true,
       curve: "smooth",
@@ -87,29 +83,27 @@ function GraphOrders(props) {
         stops: [0, 100, 75, 75],
       },
     },
-    // annotations: {
-    //   xaxis: [
-    //     {
-    //       x: new Date(date[date.length - 13]).getTime(),
-    //       borderColor: "#999",
-    //       yAxisIndex: 0,
-    //       label: {
-    //         show: true,
-    //         text: "Forecast Start",
-    //         style: {
-    //           color: "#fff",
-    //           background: "#775DD0",
-    //         },
-    //       },
-    //     },
-    //   ],
-    // },
-    // forecastDataPoints: {
-    //   count: 12,
-    //   fillOpacity: 0.5,
-    //   strokeWidth: 2,
-    //   dashArray: 2,
-    // },
+    annotations: {
+      xaxis: [
+        {
+          x: new Date(predict_start).getTime(),
+          x2: new Date(date[date.length - 1]).getTime(),
+          borderColor: "#1F9DFC",
+          yAxisIndex: 0,
+          fillColor: "#1a005c7d",
+        },
+      ],
+      // points: [
+      //   {
+      //     x: new Date(predict_start).getTime(),
+      //     y: quantities[date.indexOf(new Date(predict_start).getTime())],
+      //     marker: {
+      //       size: 2,
+      //       fillColor: "#1A005C",
+      //     },
+      //   },
+      // ],
+    },
   };
 
   return (
