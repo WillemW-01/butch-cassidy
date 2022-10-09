@@ -1,7 +1,3 @@
-from datetime import datetime
-from sqlite3 import Timestamp
-from tokenize import group
-from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -18,15 +14,31 @@ main_orders = pd.DataFrame()
 main_prices = pd.DataFrame()
 p_quants = pd.DataFrame()
 f_quants = pd.DataFrame()
+p_sales = pd.DataFrame()
+f_sales = pd.DataFrame()
 
 
 @csrf_exempt
 def sign_up(request):
     if request.method == "POST":
-        global main_orders, main_prices, p_quants, f_quants
+        global main_orders, main_prices, p_quants, f_quants, p_sales, f_sales
+
+        json_data = json.loads(request.body)
+        name = json_data["restaurant"]
+
+        # if name.lower() == "blue billie jeans":
+        #     main_orders = pd.read_csv("../data/restaurant-1-orders.csv")
+        #     main_prices = pd.read_csv("../data/restaurant-1-products-price.csv")
+        # elif name.lower() == "red butter bus":
+        #     main_orders = pd.read_csv("../data/restaurant-2-orders.csv")
+        #     main_prices = pd.read_csv("../data/restaurant-2-products-price.csv")
 
         main_orders = pd.read_csv("../data/restaurant-1-orders.csv")
         main_prices = pd.read_csv("../data/restaurant-1-products-price.csv")
+
+        #################
+        # Quantities
+        #################
 
         orders = main_orders.copy(deep=True)
 
@@ -54,6 +66,39 @@ def sign_up(request):
         p_quants.drop("date", axis=1, inplace=True)
 
         f_quants = predict(p_quants)
+
+        #################
+        # Sales
+        #################
+
+        orders = main_orders.copy(deep=True)
+
+        orders["Order Date"] = pd.to_datetime(orders["Order Date"]).dt.strftime(
+            "%Y-%m-%d"
+        )
+        orders = orders.sort_values(by="Order Date", ascending=True)
+
+        start_date = orders["Order Date"].iloc[0]
+        end_date = orders["Order Date"].iloc[-1]
+
+        orders["sales"] = orders["Product Price"] * orders["Quantity"]
+
+        grouped = orders.groupby(orders["Order Date"])["sales"].sum()
+
+        date_range = pd.date_range(start_date, end_date, freq="D")
+        column = []
+        for date in date_range:
+            d = date.strftime("%Y-%m-%d")
+            if d in grouped.index:
+                column.append(grouped[d])
+            else:
+                column.append(0)
+        dic = {"date": date_range, "sales": column}
+        p_sales = pd.DataFrame(dic)
+        p_sales = p_sales.set_index(p_sales.date)
+        p_sales.drop("date", axis=1, inplace=True)
+
+        f_sales = predict(p_sales)
 
         return JsonResponse({"success": True})
 
@@ -111,24 +156,56 @@ def get_weekly_quantities(request):
 
 
 def get_monthly_quantities(request):
-    orders1 = pd.read_csv("../data/restaurant-1-orders.csv")
     if request.method == "GET":
-        o = orders1.copy(deep=True)
-        o["Order Date"] = pd.to_datetime(o["Order Date"]).dt.strftime("%Y-%m")
-        o["Quantity"] = o["Quantity"].astype(int)
-        o = o.groupby(["Order Date"])["Quantity"].sum().to_dict()
+        global p_quants, f_quants
 
-        keys = str(list(o.keys()))
-        values = list(o.values())
+        p = p_quants.copy(deep=True)
+        f = f_quants.copy(deep=True)
 
-        (keys, values) = zip(*o.items())
+        p["date"] = p.index
+        p["month"] = p["date"].apply(lambda x: x - pd.Timedelta(days=x.day - 1))
+        p["month"] = p["month"].dt.strftime("%Y-%m")
+        p["quantity"] = p["quantity"].astype(int)
+        p = p.groupby(["month"])["quantity"].sum()
 
-        return JsonResponse({"time": keys, "quantities": values})
+        f["date"] = f.index
+        f["month"] = f["date"].apply(lambda x: x - pd.Timedelta(days=x.day - 1))
+        f["month"] = f["month"].dt.strftime("%Y-%m")
+        f["quantity"] = f["quantity"].astype(int)
+        f = f.groupby(["month"])["quantity"].sum()
+
+        pvals = [int(x) for x in p.values]
+        fvals = [float(round(x, 1)) for x in f.values]
+
+        keys = list(p.index) + list(f.index)
+        values = list(pvals) + list(fvals)
+
+        return JsonResponse(
+            {
+                "time": keys,
+                "quantities": values,
+                "predict_start": f_quants.index[0].strftime("%Y-%m-%d"),
+            }
+        )
 
 
 def calculate_daily_sales(request):
-    orders1 = pd.read_csv("../data/restaurant-1-orders.csv")
     if request.method == "GET":
+        global p_sales, f_sales
+
+        keys = list(p_sales.index.strftime("%Y-%m-%d")) + list(
+            f_sales.index.strftime("%Y-%m-%d")
+        )
+        values = list(p_sales.sales) + list(round(f_sales.sales, 1))
+
+        return JsonResponse(
+            {
+                "time": keys,
+                "sales": values,
+                "predict_start": f_quants.index[0].strftime("%Y-%m-%d"),
+            }
+        )
+
         orders1["Product Price"] = orders1["Quantity"].astype(float) * orders1[
             "Product Price"
         ].astype(float)
