@@ -4,7 +4,7 @@
 
 ## Contents
 
-[Project Description](#project-description
+[Project Description](#project-description)
 1.  [Problem](#problem)
 2.  [Solution](#solution)
 
