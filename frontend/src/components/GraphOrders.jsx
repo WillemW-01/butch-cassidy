@@ -53,7 +53,7 @@ function GraphOrders(props) {
       show: true,
       curve: "smooth",
       lineCap: "butt",
-      colors: ["#3D0082"],
+      colors: ["#7528b2"],
       width: 0.5,
       dashArray: 0,
     },
