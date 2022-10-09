@@ -616,7 +616,13 @@ def predict(Y_train):
     df = pd.DataFrame({"date": f_date_range, "quantity": quantity})
     df = df.set_index(df.date)
     df.drop("date", axis=1, inplace=True)
-    return df
+
+    # df_importances = pd.DataFrame({
+    # 'feature': model.feature_name_,
+    # 'importance': model.feature_importances_
+    # }).sort_values(by='importance', ascending=False)
+
+    return df # df_importances.to_dict('records')
 
 
 def get_season(now):
