@@ -3,6 +3,7 @@ import ReactApexChart from "react-apexcharts";
 import TimeOptions from "./TimeOptions";
 import Spinner from "./Spinner";
 import "../App.css";
+import { exec } from "apexcharts";
 
 function GraphOrders(props) {
   const [date, setDate] = useState([]);
@@ -14,6 +15,7 @@ function GraphOrders(props) {
     console.log(
       `Got past: ${pastValue} and future: ${futureValue} and interval: ${interval}`
     );
+
     const url = `http://127.0.0.1:8000/analytics/get_${interval}_quantities`;
     fetch(url).then(async (response) => {
       const data = await response.json();
@@ -35,6 +37,9 @@ function GraphOrders(props) {
     },
   ];
   const options = {
+    chart: {
+      id: "orders",
+    },
     dataLabels: {
       enabled: false,
       style: {

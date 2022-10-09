@@ -9,8 +9,6 @@
   padding-bottom: 10px;
 }
 
-
-
 /* header */
 .header {
   box-sizing: border-box;
@@ -120,27 +118,53 @@
   margin: none;
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   gap: 30px;
 }
 
 .statbar.item {
   background: white;
-  padding: 10px;
+  padding: 30px;
   border-radius: 15px;
   height: 50px;
   /* border: 1px solid black; */
   box-shadow: rgba(0, 0, 0, 0.55) 1px 1px 10px;
   cursor: pointer;
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  align-items: center;
+  gap: 0px;
   transition: 200ms;
-  font-size: 20px;
+  font-size: 18px;
+  width: fit-content;
 }
 
+
 .statbar.item:hover {
-  transform: translate(2px, 2px);
+  transform: scale(1.07, 1.07);
+  background: rgba(35, 28, 75, 0.763);
+  color: white;
+}
+
+.statbar:last-child {
+  background: rgba(35, 28, 75, 0.763);
+  color: white;
+}
+
+.statbar:last-child:hover {
+  background: white;
+  color: black;
+}
+
+.statbar.item.top,
+.statbar.item.bottom {
+  all: unset;
+}
+
+.statbar.item.top {
+  font-weight: bold;
+  text-align: left;
+  font-size: 20px;
 }
 
 /* main data */
