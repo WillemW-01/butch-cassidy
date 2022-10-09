@@ -1,12 +1,17 @@
-/* .container {
+.logo {
+  background: white;
+  padding: 15px;
+  border-radius: 7px;
+  margin: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  height: 100vh;
-  background: rgb(1, 0, 65);
-  background: linear-gradient(135deg, rgba(1, 0, 65, 1) 0%, rgba(88, 0, 159, 1) 51%, rgba(225, 192, 251, 1) 100%);
-} */
+  box-shadow: rgba(255, 255, 255, 0.426) 1px 1px 10px;
+}
+
+.logo h1 {
+  margin: 10px 0px;
+}
 
 .register {
   background: white;
@@ -36,6 +41,7 @@
 }
 
 .register.body {
+  font-size: 18px;
   background: white;
   gap: 15px;
   box-shadow: none;
@@ -81,10 +87,12 @@
 .register.body button {
   background: rgb(20, 23, 71);
   color: white;
-  border-radius: 20px;
-  padding: 7px;
+  border-radius: 7px;
+  padding: 10px;
   width: 100%;
   border: none;
+  font-size: 18px;
+  cursor: pointer;
 }
 
 .register.body button:active,
