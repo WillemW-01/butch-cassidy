@@ -19,6 +19,7 @@ main_prices = pd.DataFrame()
 p_quants = pd.DataFrame()
 f_quants = pd.DataFrame()
 
+
 @csrf_exempt
 def sign_up(request):
     if request.method == "POST":
@@ -54,7 +55,7 @@ def sign_up(request):
 
         f_quants = predict(p_quants)
 
-        return JsonResponse({"success":True})
+        return JsonResponse({"success": True})
 
 
 def get_daily_quantities(request):
@@ -67,7 +68,11 @@ def get_daily_quantities(request):
         values = list(p_quants.quantity) + list(round(f_quants.quantity, 1))
 
         return JsonResponse(
-            {"time": keys, "quantities": values, "predict_start": f_quants.index[0].strftime("%Y-%m-%d")}
+            {
+                "time": keys,
+                "quantities": values,
+                "predict_start": f_quants.index[0].strftime("%Y-%m-%d"),
+            }
         )
 
 
@@ -78,19 +83,14 @@ def get_weekly_quantities(request):
         p = p_quants.copy(deep=True)
         f = f_quants.copy(deep=True)
 
-        p['date'] = p.index
-        p["week"] = p['date'].apply(
-            lambda x: x - pd.Timedelta(days=x.weekday())
-        )
+        p["date"] = p.index
+        p["week"] = p["date"].apply(lambda x: x - pd.Timedelta(days=x.weekday()))
         p["week"] = p["week"].dt.strftime("%Y-%m-%d")
         p["quantity"] = p["quantity"].astype(int)
         p = p.groupby(["week"])["quantity"].sum()
 
-
-        f['date'] = f.index
-        f["week"] = f['date'].apply(
-            lambda x: x - pd.Timedelta(days=x.weekday())
-        )
+        f["date"] = f.index
+        f["week"] = f["date"].apply(lambda x: x - pd.Timedelta(days=x.weekday()))
         f["week"] = f["week"].dt.strftime("%Y-%m-%d")
         f["quantity"] = f["quantity"].astype(int)
         f = f.groupby(["week"])["quantity"].sum()
@@ -102,7 +102,11 @@ def get_weekly_quantities(request):
         values = list(pvals) + list(fvals)
 
         return JsonResponse(
-            {"time": keys, "quantities": values, "predict_start": f_quants.index[0].strftime("%Y-%m-%d")}
+            {
+                "time": keys,
+                "quantities": values,
+                "predict_start": f_quants.index[0].strftime("%Y-%m-%d"),
+            }
         )
 
 
