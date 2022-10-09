@@ -16,8 +16,9 @@ function Dashboard() {
   const [hasUploaded, setHasUploaded] = useState(false);
   const [showSpinner, setShowSpinner] = useState(false);
   const [averageOrder, setAverageOrder] = useState({});
+  const [bestItem, setBestItem] = useState(0);
   const [expectedToday, setExpectedToday] = useState(0);
-  const [salesDifference, setSalesDifference] = useState(0);
+  const [ordersDifference, setOrdersDifference] = useState(0);
 
   const [statSpinner1, setStatSpinner1] = useState(false);
   const [statSpinner2, setStatSpinner2] = useState(false);
@@ -31,7 +32,9 @@ function Dashboard() {
       setShowSpinner(false);
       setHasUploaded(true);
       getAverage();
+      getBestItem();
       getExpectedToday();
+      getOrdersDifference();
       console.log("Set show to true");
     });
   };
@@ -52,6 +55,19 @@ function Dashboard() {
     );
   };
 
+  const getBestItem = () => {
+    setShowSpinner(false);
+    fetch("http://127.0.0.1:8000/analytics/best_item").then(
+      async (response) => {
+        const data = await response.json();
+        console.log(data);
+
+        setBestItem(data.prediction);
+        setStatSpinner2(true);
+      }
+    );
+  };
+
   const getExpectedToday = () => {
     setShowSpinner(false);
     fetch("http://127.0.0.1:8000/analytics/expected_orders_today").then(
@@ -65,14 +81,14 @@ function Dashboard() {
     );
   };
 
-  const getSalesDifference = () => {
+  const getOrdersDifference = () => {
     setShowSpinner(false);
-    fetch("http://127.0.0.1:8000/analytics/difference").then(
+    fetch("http://127.0.0.1:8000/analytics/expected_orders_change").then(
       async (response) => {
         const data = await response.json();
         console.log(data);
 
-        setSalesDifference(data.prediction);
+        setOrdersDifference(data.prediction);
         setStatSpinner4(true);
       }
     );
@@ -118,7 +134,7 @@ function Dashboard() {
                 <div className="statbar item">
                   {statSpinner2 ? (
                     <>
-                      <div className="statbar item top">Plain naan</div>
+                      <div className="statbar item top">{bestItem}</div>
                       <div className="statbar item bottom">
                         Best item yesterday
                       </div>
@@ -142,9 +158,12 @@ function Dashboard() {
                 <div className="statbar item">
                   {statSpinner4 ? (
                     <>
-                      <div className="statbar item top">10% increase</div>
+                      <div className="statbar item top">
+                        {ordersDifference}%
+                        {ordersDifference > 0 ? " increase" : " decrease"}
+                      </div>
                       <div className="statbar item bottom">
-                        Expected orders for tomorrow
+                        Expected sales for tomorrow
                       </div>
                     </>
                   ) : (

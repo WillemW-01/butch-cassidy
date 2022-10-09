@@ -29,7 +29,7 @@ function Auth() {
         },
         body: JSON.stringify({ restaurant: restaurant }),
       }).then((response) => {
-        const data = response.json();
+        // const data = response.json();
       });
     } else {
       console.log("Cant send restaurant name");
@@ -64,7 +64,7 @@ function Auth() {
   return (
     <div className="container">
       <div className="logo">
-        <img src={logo} height="50px"></img>
+        <img src={logo} height="50px" alt="Logo of Purple Analytics"></img>
         <h1>Purple Analytics</h1>
       </div>
       <div className="register">
