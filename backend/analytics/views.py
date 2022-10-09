@@ -277,6 +277,23 @@ def calculate_monthly_sales(request):
         )
 
 
+def best_item(request):
+    orders = pd.read_csv("../data/restaurant-1-orders.csv")
+    if request.method == "GET":
+        orders["Order Date"] = pd.to_datetime(orders["Order Date"])
+        orders["Weekday"] = orders["Order Date"].apply(
+            lambda x: calendar.day_name[x.weekday()]
+        )
+        group_day_name = orders.groupby(["Weekday"])["Item Name"]
+        # top selling item for that weekday
+        top_items = group_day_name.apply(lambda x: x.unique())
+        top_items = top_items.apply(lambda x: x.tolist())
+        top_items = top_items.apply(lambda x: x[0])
+        top_items = top_items.to_dict()
+
+        return JsonResponse(top_items)
+
+
 @csrf_exempt
 def search_combos(request):
     orders = main_orders.copy(deep=True)
