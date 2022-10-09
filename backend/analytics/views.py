@@ -276,6 +276,14 @@ def calculate_monthly_sales(request):
         )
 
 
+# def search_combos(request){
+#     if request.method == "GET":
+#         # group items names with orders
+
+#         # count repeated items with that order
+# }
+
+
 @csrf_exempt
 def search_items(request):
     if request.method == "POST":
