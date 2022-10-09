@@ -61,8 +61,7 @@ function Dashboard() {
       async (response) => {
         const data = await response.json();
         console.log(data);
-
-        setBestItem(data.tuesday);
+        setBestItem(data.Tuesday);
         setStatSpinner2(true);
       }
     );
