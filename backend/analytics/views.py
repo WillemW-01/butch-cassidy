@@ -169,8 +169,8 @@ def top_items(request):
 
 
 def weekday_popularity(request):
+    orders1 = pd.read_csv("../data/restaurant-1-orders.csv")
     if request.method == "GET":
-        orders1 = pd.read_csv("../data/restaurant-1-orders.csv")
         # find assign weekday to order_date
         orders1["Order Date"] = pd.to_datetime(orders1["Order Date"])
         orders1["Weekday"] = orders1["Order Date"].apply(
@@ -182,3 +182,20 @@ def weekday_popularity(request):
         (keys, values) = zip(*grouped.items())
 
         return JsonResponse({"weekdays": keys, "quantity": values})
+
+
+def average_order(request):
+    orders1 = pd.read_csv("../data/restaurant-1-orders.csv")
+    if request.method == "GET":
+        orders1["Order Number"] = orders1["Order Number"]
+        grouped_quantity = orders1.groupby(["Order Number"])["Quantity"].sum()
+        average_quantity = grouped_quantity.mean()
+        orders1["Product Price"] = orders1["Quantity"].astype(float) * orders1[
+            "Product Price"
+        ].astype(float)
+        grouped_sales = orders1.groupby(["Order Number"])["Product Price"].sum()
+        # (keys, values) = zip(*grouped_sales.items())
+        # return JsonResponse({"order_number": keys, "quantity": values})
+        average_quantity = round((grouped_quantity.mean()), 2)
+        average_sales = round((grouped_sales.mean()), 2)
+        return JsonResponse({"average": average_quantity, "sales": average_sales})

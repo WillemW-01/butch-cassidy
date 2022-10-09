@@ -6,15 +6,17 @@ import Spinner from "./Spinner";
 function WeekdayGraph(props) {
   const [weekdays, setWeekdays] = useState([]);
   const [quantities, setQuantities] = useState([]);
-  const [shouldShow, setShouldShow] = useState(true);
+  const [shouldShow, setShouldShow] = useState(false);
 
   const getData = () => {
+    setShouldShow(false);
     fetch("http://127.0.0.1:8000/analytics/weekday_popularity").then(
       async (response) => {
         const data = await response.json();
         console.log(data);
         setWeekdays(data.weekdays);
         setQuantities(data.quantity);
+        setShouldShow(true);
       }
     );
   };
@@ -29,6 +31,11 @@ function WeekdayGraph(props) {
     },
   ];
   const options = {
+    chart: {
+      toolbar: {
+        show: false,
+      },
+    },
     plotOptions: {
       bar: {
         barHeight: "100%",
@@ -39,6 +46,7 @@ function WeekdayGraph(props) {
         },
       },
     },
+
     colors: [
       "#231c4b",
       "#3b3b98",

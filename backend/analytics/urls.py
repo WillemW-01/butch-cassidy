@@ -12,4 +12,5 @@ urlpatterns = [
     path("get_weekly_quantities", views.get_weekly_quantities),
     path("search_items", views.search_items),
     path("weekday_popularity", views.weekday_popularity),
+    path("average_order", views.average_order),
 ]
