@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import GraphOrders from "../components/GraphOrders";
 import Treemap from "../components/Treemap";
 import Spinner from "../components/Spinner";
@@ -28,6 +28,7 @@ function Dashboard(props) {
     sleep(1000).then(() => {
       setShowSpinner(false);
       setHasUploaded(true);
+      getAverage();
       console.log("Set show to true");
     });
   };
@@ -55,11 +56,6 @@ function Dashboard(props) {
     console.log(tempArray);
     setStatSpinners(tempArray);
   };
-
-  useEffect(() => {
-    console.log(`Has uploaded: ${hasUploaded}`);
-    getAverage();
-  }, [hasUploaded]);
 
   const sleep = (milliseconds) => {
     return new Promise((resolve) => setTimeout(resolve, milliseconds));

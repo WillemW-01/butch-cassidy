@@ -6,7 +6,6 @@ import "./combo.css";
 import Spinner from "./Spinner";
 
 function Combo() {
-  const [graphData, setGraphData] = useState([]);
   const [itemList, setItemList] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [shouldShow, setShouldShow] = useState(true);
@@ -27,6 +26,7 @@ function Combo() {
     if (itemList.length === 0) {
       getData();
     }
+    // eslint-disable-next-line
   }, []);
 
   const getCombos = async (e) => {

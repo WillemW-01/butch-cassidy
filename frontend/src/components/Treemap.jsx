@@ -77,6 +77,7 @@ function Treemap(props) {
     if (graphData.length === 0) {
       getData();
     }
+    // eslint-disable-next-line
   }, []);
 
   const getFilteredData = (text) => {
@@ -99,6 +100,7 @@ function Treemap(props) {
       toolbar: {
         show: false,
       },
+      type: "treemap",
     },
     plotOptions: {
       treemap: {
@@ -112,9 +114,6 @@ function Treemap(props) {
     },
     legend: {
       show: false,
-    },
-    chart: {
-      type: "treemap",
     },
     title: {
       text: "",
