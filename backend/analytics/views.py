@@ -24,22 +24,25 @@ f_orders = pd.DataFrame()
 @csrf_exempt
 def sign_up(request):
     if request.method == "POST":
-        global main_orders, main_prices, p_quants, f_quants, p_sales, f_sales, p_orders, f_orders
-    
-        json_data = json.loads(request.body)
-        name = json_data["restaurant"].lower()
+        global main_orders, main_prices, p_quants, f_quants, p_sales, f_sales
 
-        if name == "blue billie jeans":
+        json_data = json.loads(request.body)
+        name = json_data["restaurant"]
+
+        if name.lower() == "blue billie jeans":
             main_orders = pd.read_csv("../data/restaurant-1-orders.csv")
             main_prices = pd.read_csv("../data/restaurant-1-products-price.csv")
-        elif name == "red butter bus":
+
+        elif name.lower() == "red butter bus":
             main_orders = pd.read_csv("../data/restaurant-2-orders.csv")
+            main_orders["Order Number"] = main_orders["Order ID"]
             main_prices = pd.read_csv("../data/restaurant-2-products-price.csv")
         else:
             main_orders = pd.read_csv("../data/restaurant-1-orders.csv")
             main_prices = pd.read_csv("../data/restaurant-1-products-price.csv")
-            
 
+        # main_orders = pd.read_csv("../data/restaurant-1-orders.csv")
+        # main_prices = pd.read_csv("../data/restaurant-1-products-price.csv")
 
         #################
         # Quantities
@@ -105,40 +108,7 @@ def sign_up(request):
 
         f_sales = predict(p_sales)
 
-        #################
-        # Orders
-        #################
-
-        orders = main_orders.copy(deep=True)
-
-        orders["Order Date"] = pd.to_datetime(orders["Order Date"]).dt.strftime(
-            "%Y-%m-%d"
-        )
-        orders = orders.sort_values(by="Order Date", ascending=True)
-
-        start_date = orders["Order Date"].iloc[0]
-        end_date = orders["Order Date"].iloc[-1]
- 
-        orders = orders[['Order Number', 'Order Date']].drop_duplicates(subset=['Order Number'], keep='first')
-        orders = orders['Order Date']
-        grouped = orders.value_counts().sort_index()
-
-        date_range = pd.date_range(start_date, end_date, freq="D")
-        column = []
-        for date in date_range:
-            d = date.strftime("%Y-%m-%d")
-            if d in grouped.index:
-                column.append(grouped[d])
-            else:
-                column.append(0)
-        dic = {"date": date_range, "quantity": column}
-        p_orders = pd.DataFrame(dic)
-        p_orders = p_orders.set_index(p_orders.date)
-        p_orders.drop("date", axis=1, inplace=True)
-
-        f_orders = predict(p_orders)
-
-        return JsonResponse({"success":True})
+        return JsonResponse({"success": True})
 
 
 def get_daily_quantities(request):
@@ -315,7 +285,7 @@ def calculate_monthly_sales(request):
 
 
 def best_item(request):
-    orders = pd.read_csv("../data/restaurant-1-orders.csv")
+    orders = main_orders.copy(deep=True)
     if request.method == "GET":
         orders["Order Date"] = pd.to_datetime(orders["Order Date"])
         orders["Weekday"] = orders["Order Date"].apply(
@@ -430,31 +400,33 @@ def average_order(request):
 
 
 def expected_orders_today(request):
-     if request.method == "GET":
+    if request.method == "GET":
         global f_orders
 
         f = f_orders.copy(deep=True)
 
         f.index = f.index.strftime("%m-%d")
-        tod = date.today().strftime('%m-%d')
+        tod = date.today().strftime("%m-%d")
 
-        return JsonResponse({'prediction':float(round(f.loc[tod], 1))})
+        return JsonResponse({"prediction": float(round(f.loc[tod], 1))})
 
 
 def expected_orders_change(request):
-     if request.method == "GET":
+    if request.method == "GET":
         global f_orders
 
         f = f_orders.copy(deep=True)
 
         f.index = f.index.strftime("%m-%d")
 
-        tod = date.today().strftime('%m-%d')
+        tod = date.today().strftime("%m-%d")
         tom = (date.today() + timedelta(days=1)).strftime("%m-%d")
-        
-        change = round((float(f.loc[tom])-float(f.loc[tod]))/float(f.loc[tod])*100, 1)
 
-        return JsonResponse({'change':change})
+        change = round(
+            (float(f.loc[tom]) - float(f.loc[tod])) / float(f.loc[tod]) * 100, 1
+        )
+
+        return JsonResponse({"change": change})
 
 
 def predict(Y_train):
