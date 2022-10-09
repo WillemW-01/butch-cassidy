@@ -1,9 +1,6 @@
 # Restaurant Forecasting App: Butch Cassidy Group
 
-<img alt="GitHub contributors" src="https://img.shields.io/github/contributors-anon/WillemW-01/butch-cassidy">
-<img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/WillemW-01/butch-cassidy">
-<img alt="GitHub language count" src="https://img.shields.io/github/languages/count/WillemW-01/butch-cassidy">
-<img alt="GitHub top language" src="https://img.shields.io/github/languages/top/WillemW-01/butch-cassidy">
+<img alt="GitHub contributors" src="https://img.shields.io/github/contributors-anon/WillemW-01/butch-cassidy"> <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/WillemW-01/butch-cassidy"> <img alt="GitHub language count" src="https://img.shields.io/github/languages/count/WillemW-01/butch-cassidy"> <img alt="GitHub top language" src="https://img.shields.io/github/languages/top/WillemW-01/butch-cassidy">
 
 ## Contents
 
@@ -28,8 +25,6 @@
 
 ## Project Description
 
----
-
 This project is a solution to the problem stipulated in the Standard Bank Lab Hackathon October 2022.
 
 ### Problem:
@@ -41,8 +36,6 @@ This project is a solution to the problem stipulated in the Standard Bank Lab Ha
 \<this is the solution>
 
 ## Environment, Installation and Execution
-
----
 
 The requirements and steps to run the program are described below.
 
