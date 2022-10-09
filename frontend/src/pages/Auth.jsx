@@ -1,7 +1,9 @@
 import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import Spinner from "../components/Spinner";
+import logo from "./add-panel.svg";
 
 import "./auth.css";
 
@@ -22,14 +24,13 @@ function Auth(props) {
     console.log(`Username: ${username} | Restaurant: ${restaurant} | Email: ${email} 
     | Password: ${password} | Confirmed password: ${password2}`);
 
-    if (password !== password2) {
+    if (!(username || restaurant || email || password || password2)) {
+      return;
+    } else if (password !== password2) {
       return setIsError(true);
     }
 
-    props.setUsername(username);
-    props.setRestaurant(restaurant);
-    props.setEmail(email);
-    props.setPassword(password);
+    props.setDetails(username, restaurant, email, password);
 
     setIsCorrect(true);
 
@@ -45,6 +46,10 @@ function Auth(props) {
 
   return (
     <div className="container">
+      <div className="logo">
+        <img src={logo} height="50px"></img>
+        <h1>Purple Analytics</h1>
+      </div>
       <div className="register">
         <div className="register label">
           <h2>Register a new account</h2>

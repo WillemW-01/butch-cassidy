@@ -13,13 +13,14 @@ function Dashboard(props) {
   const [showSpinner, setShowSpinner] = useState(false);
   const [averageOrderQuantity, setAverageOrderQuantity] = useState(0);
   const [averageOrderValue, setAverageOrderValue] = useState(0);
+  const [hasUploaded, setHasUploaded] = useState(false);
 
   const getData = () => {
     console.log("Got data");
     setShowSpinner(true);
     sleep(1000).then(() => {
       setShowSpinner(false);
-      // props.setHasUploaded(true);
+      setHasUploaded(true);
       console.log("Set show to true");
     });
   };
@@ -38,9 +39,9 @@ function Dashboard(props) {
   };
 
   useEffect(() => {
-    console.log(`Has uploaded: ${props.hasUploaded}`);
+    console.log(`Has uploaded: ${hasUploaded}`);
     getAverage();
-  }, [props.hasUploaded]);
+  }, [hasUploaded]);
 
   const sleep = (milliseconds) => {
     return new Promise((resolve) => setTimeout(resolve, milliseconds));
@@ -51,9 +52,9 @@ function Dashboard(props) {
       <div className="dashboard">
         <div className="header">
           <img src={icon} width="50px" alt="logo" />
-          <h1>Dashboard</h1>
+          <h1>Purple Analytics - Dashboard</h1>
           <label htmlFor="input">
-            Upload your data
+            Upload
             <input id="input" type="file" accept=".csv" onChange={getData} />
           </label>
           <div className="header logout">
@@ -62,43 +63,47 @@ function Dashboard(props) {
         </div>
 
         <div className="data body">
-          {/* {props.hasUploaded && ( */}
-          <>
-            <div className="statbar">
-              <div className="statbar item">Next holiday: Christmas Day</div>
-              <div className="statbar item">
-                <label>Averages:</label>
-                <label>Orders: {averageOrderQuantity}</label>
-                <label>Sales: ${averageOrderValue}</label>
+          {hasUploaded ? (
+            <>
+              <div className="statbar">
+                <div className="statbar item">Next holiday: Christmas Day</div>
+                <div className="statbar item">
+                  <label>Averages:</label>
+                  <label>Orders: {averageOrderQuantity}</label>
+                  <label>Sales: ${averageOrderValue}</label>
+                </div>
+                <div className="statbar item">
+                  Worst performing item: Masala
+                </div>
               </div>
-              <div className="statbar item">Worst performing item: Masala</div>
-            </div>
-            <div className="section header"></div>
-            <div className="main">
-              <div className="main graph one">
-                <GraphOrders title="Quantities Sold" />
+              <div className="section header"></div>
+              <div className="main">
+                <div className="main graph one">
+                  <GraphOrders title="Quantities Sold" />
+                </div>
+                <div className="main graph two">
+                  <GraphSales title="Sales" />
+                </div>
               </div>
-              <div className="main graph two">
-                <GraphSales title="Sales" />
+              <div className="section header">
+                <img src={bulb} width="35px" alt="logo" /> Insights
               </div>
-            </div>
-            <div className="section header">
-              <img src={bulb} width="50px" alt="logo" /> Insights
-            </div>
-            <div className="insights">
-              <div className="insight item">Combos</div>
-              <div className="insight item">
-                <Treemap title="Item Distribution" />
+              <div className="insights">
+                <div className="insight item">Combos</div>
+                <div className="insight item">
+                  <Treemap title="Item Distribution" />
+                </div>
+                <div className="insight item">
+                  <WeekdayGraph title="Weekday" />
+                </div>
               </div>
-              <div className="insight item">
-                <WeekdayGraph title="Weekday" />
-              </div>
-            </div>
-          </>
-          {/* )} */}
+            </>
+          ) : showSpinner ? (
+            <Spinner type="spinner" />
+          ) : (
+            <div className="noData">No data yet - upload your data above.</div>
+          )}
         </div>
-
-        {showSpinner && <Spinner />}
       </div>
     </div>
   );
