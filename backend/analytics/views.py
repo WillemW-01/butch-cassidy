@@ -417,9 +417,25 @@ def expected_orders_today(request):
         f = f_orders.copy(deep=True)
 
         f.index = f.index.strftime("%m-%d")
-        now = datetime.now().strftime('%m-%d')
+        tod = date.today().strftime('%m-%d')
 
-        return JsonResponse({'prediction':float(round(f.loc[now], 1))})
+        return JsonResponse({'prediction':float(round(f.loc[tod], 1))})
+
+
+def expected_orders_change(request):
+     if request.method == "GET":
+        global f_orders
+
+        f = f_orders.copy(deep=True)
+
+        f.index = f.index.strftime("%m-%d")
+
+        tod = date.today().strftime('%m-%d')
+        tom = (date.today() + timedelta(days=1)).strftime("%m-%d")
+        
+        change = round((float(f.loc[tom])-float(f.loc[tod]))/float(f.loc[tod])*100, 1)
+
+        return JsonResponse({'change':change})
 
 
 def predict(Y_train):
