@@ -15,5 +15,5 @@ urlpatterns = [
     path("weekday_popularity", views.weekday_popularity),
     path("average_order", views.average_order),
     path("expected_orders_today", views.expected_orders_today),
-    
+    path("expected_orders_change", views.expected_orders_change),
 ]
