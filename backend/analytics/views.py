@@ -314,7 +314,7 @@ def calculate_monthly_sales(request):
 
 @csrf_exempt
 def search_combos(request):
-    orders = pd.read_csv("../data/restaurant-1-orders.csv")
+    orders = main_orders.copy(deep=True)
     if request.method == "POST":
         json_data = json.loads(request.body)
         search_key = json_data["key"]
