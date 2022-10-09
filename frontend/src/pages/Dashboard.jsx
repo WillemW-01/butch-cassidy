@@ -12,10 +12,8 @@ import Combo from "../components/Combo";
 
 function Dashboard(props) {
   const [showSpinner, setShowSpinner] = useState(false);
-  // const [averageOrderQuantity, setAverageOrderQuantity] = useState(0);
-  // const [averageOrderValue, setAverageOrderValue] = useState(0);
   const [averageOrder, setAverageOrder] = useState({});
-  const [hasUploaded, setHasUploaded] = useState(true);
+  const [hasUploaded, setHasUploaded] = useState(false);
 
   const [statSpinners, setStatSpinners] = useState([
     false,
