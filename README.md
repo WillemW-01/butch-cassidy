@@ -4,12 +4,11 @@
 
 ## Contents
 
-[Project Description](#project-description)
-
+[Project Description](#project-description
 1.  [Problem](#problem)
 2.  [Solution](#solution)
 
-[Environment, Installation and Execution](#environment-installation-and-execution)
+[Environment, Installation and Execution](#environment-installation-and-execution).
 
 1. [Frontend](#frontend)
 
@@ -29,11 +28,17 @@ This project is a solution to the problem stipulated in the Standard Bank Lab Ha
 
 ### Problem:
 
-\<this is the problem>
+The problem set was a data set of two London-based Indian take-away restaurants including their set of orders over a time period of 2015-2019. The problem was to develop a forecasting solution to the given data set.
+
 
 ### Solution:
 
-\<this is the solution>
+
+Our solution is a web-based application that acts like a dashboard for restaurant data with forecasting. The forecasting was done through a machine learning model (more details are described in the Jupyter Notebook). 
+
+**Important note:**
+
+In order to view the first restaurant's dataset, input "Blue Billie Jeans" as the restaurant name, and for the second dataset, "Red Butter Bus".
 
 ## Environment, Installation and Execution
 
