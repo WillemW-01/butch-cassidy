@@ -1,3 +1,5 @@
+from datetime import datetime
+from sqlite3 import Timestamp
 from tokenize import group
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -5,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 import pandas as pd
 import numpy as np
+import calendar
 
 # orders1 = pd.read_csv("../data/restaurant-1-orders.csv")
 # orders2 = pd.read_csv("../data/restaurant-2-orders.csv")
@@ -163,3 +166,19 @@ def top_items(request):
         (keys, values) = zip(*grouped.items())
 
         return JsonResponse({"items": keys, "quantity": values})
+
+
+def weekday_popularity(request):
+    if request.method == "GET":
+        orders1 = pd.read_csv("../data/restaurant-1-orders.csv")
+        # find assign weekday to order_date
+        orders1["Order Date"] = pd.to_datetime(orders1["Order Date"])
+        orders1["Weekday"] = orders1["Order Date"].apply(
+            lambda x: calendar.day_name[x.weekday()]
+        )
+
+        # group by weekday and sum quantity
+        grouped = orders1.groupby(["Weekday"])["Quantity"].sum()
+        (keys, values) = zip(*grouped.items())
+
+        return JsonResponse({"weekdays": keys, "quantity": values})

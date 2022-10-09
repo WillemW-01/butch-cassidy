@@ -11,4 +11,5 @@ urlpatterns = [
     path("get_monthly_quantities", views.get_monthly_quantities),
     path("get_weekly_quantities", views.get_weekly_quantities),
     path("search_items", views.search_items),
+    path("weekday_popularity", views.weekday_popularity),
 ]
