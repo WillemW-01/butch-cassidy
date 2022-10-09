@@ -7,7 +7,7 @@ import logo from "./add-panel.svg";
 
 import "./auth.css";
 
-function Auth(props) {
+function Auth() {
   const [username, setUsername] = useState("");
   const [restaurant, setRestaurant] = useState("");
   const [email, setEmail] = useState("");
@@ -18,6 +18,23 @@ function Auth(props) {
   const [isCorrect, setIsCorrect] = useState(false);
 
   const navigation = useNavigate();
+
+  const sendRestaurant = async (restaurant) => {
+    if (restaurant) {
+      console.log(`Sending: ${restaurant}`);
+      await fetch("http://127.0.0.1:8000/analytics/sign_up", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ restaurant: restaurant }),
+      }).then((response) => {
+        const data = response.json();
+      });
+    } else {
+      console.log("Cant send restaurant name");
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -30,7 +47,7 @@ function Auth(props) {
       return setIsError(true);
     }
 
-    props.setDetails(username, restaurant, email, password);
+    sendRestaurant(restaurant);
 
     setIsCorrect(true);
 

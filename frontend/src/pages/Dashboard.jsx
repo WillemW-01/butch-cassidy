@@ -17,21 +17,21 @@ function Dashboard() {
   const [showSpinner, setShowSpinner] = useState(false);
   const [averageOrder, setAverageOrder] = useState({});
   const [expectedToday, setExpectedToday] = useState(0);
+  const [salesDifference, setSalesDifference] = useState(0);
 
-  const [statSpinners, setStatSpinners] = useState([
-    false,
-    false,
-    false,
-    false,
-  ]);
+  const [statSpinner1, setStatSpinner1] = useState(false);
+  const [statSpinner2, setStatSpinner2] = useState(false);
+  const [statSpinner3, setStatSpinner3] = useState(false);
+  const [statSpinner4, setStatSpinner4] = useState(false);
 
   const getData = () => {
     console.log("Got data");
     setShowSpinner(true);
-    sleep(1000).then(() => {
+    sleep(1500).then(() => {
       setShowSpinner(false);
       setHasUploaded(true);
       getAverage();
+      getExpectedToday();
       console.log("Set show to true");
     });
   };
@@ -47,30 +47,35 @@ function Dashboard() {
           quantity: data.average.toFixed(1),
           value: data.sales,
         });
-        updateStatSpinners(0, true);
+        setStatSpinner1(true);
       }
     );
   };
 
   const getExpectedToday = () => {
     setShowSpinner(false);
-    fetch("http://127.0.0.1:8000/analytics/expected_today").then(
+    fetch("http://127.0.0.1:8000/analytics/expected_orders_today").then(
       async (response) => {
         const data = await response.json();
         console.log(data);
 
-        setExpectedToday(data.expected);
-        updateStatSpinners(2, true);
+        setExpectedToday(data.prediction);
+        setStatSpinner3(true);
       }
     );
   };
 
-  const updateStatSpinners = (index, value) => {
-    let tempArray = [...statSpinners];
-    tempArray[index] = value;
-    console.log("Temp array");
-    console.log(tempArray);
-    setStatSpinners(tempArray);
+  const getSalesDifference = () => {
+    setShowSpinner(false);
+    fetch("http://127.0.0.1:8000/analytics/difference").then(
+      async (response) => {
+        const data = await response.json();
+        console.log(data);
+
+        setSalesDifference(data.prediction);
+        setStatSpinner4(true);
+      }
+    );
   };
 
   const sleep = (milliseconds) => {
@@ -97,7 +102,7 @@ function Dashboard() {
             <>
               <div className="statbar">
                 <div className="statbar item">
-                  {statSpinners[0] ? (
+                  {statSpinner1 ? (
                     <>
                       <div className="statbar item top">
                         £{averageOrder.value} | {averageOrder.quantity} items
@@ -111,7 +116,7 @@ function Dashboard() {
                   )}
                 </div>
                 <div className="statbar item">
-                  {statSpinners[1] ? (
+                  {statSpinner2 ? (
                     <>
                       <div className="statbar item top">Plain naan</div>
                       <div className="statbar item bottom">
@@ -123,9 +128,9 @@ function Dashboard() {
                   )}
                 </div>
                 <div className="statbar item">
-                  {statSpinners[2] ? (
+                  {statSpinner3 ? (
                     <>
-                      <div className="statbar item top">10.4</div>
+                      <div className="statbar item top">{expectedToday}</div>
                       <div className="statbar item bottom">
                         Expected orders for today
                       </div>
@@ -135,7 +140,7 @@ function Dashboard() {
                   )}
                 </div>
                 <div className="statbar item">
-                  {statSpinners[3] ? (
+                  {statSpinner4 ? (
                     <>
                       <div className="statbar item top">10% increase</div>
                       <div className="statbar item bottom">
@@ -167,7 +172,10 @@ function Dashboard() {
                   <Treemap title="Item Distribution" />
                 </div>
                 <div className="insight item">
-                  <WeekdayGraph title="Order quantities per weekday" />
+                  <WeekdayGraph
+                    title="Order quantities per weekday"
+                    hasUploaded={hasUploaded}
+                  />
                 </div>
               </div>
             </>

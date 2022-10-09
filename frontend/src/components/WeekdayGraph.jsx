@@ -7,7 +7,7 @@ function WeekdayGraph(props) {
   const [quantities, setQuantities] = useState([]);
   const [shouldShow, setShouldShow] = useState(false);
 
-  const getData = () => {
+  const getData = (props) => {
     setShouldShow(false);
     fetch("http://127.0.0.1:8000/analytics/weekday_popularity").then(
       async (response) => {
@@ -20,7 +20,9 @@ function WeekdayGraph(props) {
   };
 
   useEffect(() => {
-    getData();
+    if (props.hasUploaded) {
+      getData();
+    }
     // eslint-disable-next-line
   }, []);
 
